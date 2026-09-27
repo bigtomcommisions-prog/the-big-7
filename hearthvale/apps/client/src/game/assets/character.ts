@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { AnimState, Appearance } from '@hearthvale/shared';
+import type { Accessory, AnimState, Appearance } from '@hearthvale/shared';
 import { VoxelBuilder, materials, shadeHex } from '../voxel.ts';
 
 interface Proportions {
@@ -13,109 +13,208 @@ const BODY: Record<Appearance['body'], Proportions> = {
   round: { legH: 0.46, legW: 0.26, torsoW: 0.8, torsoH: 0.6, torsoD: 0.56, head: 0.64, armW: 0.21, armH: 0.5 },
 };
 
+/** Colour of an accessory the character is wearing, or undefined if they aren't wearing it. */
+const worn = (a: Appearance, kind: Accessory) => a.accessories.find((x) => x.kind === kind)?.color;
+
+/** Hats that sit over the whole scalp, hiding spikes and buns underneath. */
+const FULL_HATS: Accessory[] = ['beanie', 'strawhat', 'cap', 'wizardhat'];
+
 function buildHead(a: Appearance, p: Proportions): THREE.BufferGeometry {
   const s = p.head;
   const b = new VoxelBuilder(0.02, 7);
   const hair = a.hairColor;
-  const acc = a.accessoryColor;
-  // Head + face
-  b.box(0, s / 2, 0, s, s, s, a.skin);
-  b.box(-s * 0.2, s * 0.48, s / 2 + 0.005, 0.08, 0.12, 0.02, '#2b2220');
-  b.box(s * 0.2, s * 0.48, s / 2 + 0.005, 0.08, 0.12, 0.02, '#2b2220');
-  b.box(-s * 0.2, s * 0.52, s / 2 + 0.012, 0.03, 0.04, 0.01, '#ffffff');
-  b.box(s * 0.2, s * 0.52, s / 2 + 0.012, 0.03, 0.04, 0.01, '#ffffff');
-  b.box(-s * 0.33, s * 0.32, s / 2 + 0.005, 0.1, 0.05, 0.02, '#f29c9c');
-  b.box(s * 0.33, s * 0.32, s / 2 + 0.005, 0.1, 0.05, 0.02, '#f29c9c');
-  b.box(0, s * 0.28, s / 2 + 0.005, 0.1, 0.03, 0.02, shadeHex(a.skin, 0.65));
+  /** A box spanning y0..y1 (easier to line up pieces than centre + height). */
+  const span = (x: number, y0: number, y1: number, z: number, w: number, d: number, c: THREE.ColorRepresentation) => b.box(x, (y0 + y1) / 2, z, w, y1 - y0, d, c);
 
-  const cap = () => {
-    b.box(0, s + 0.06, 0, s + 0.08, 0.14, s + 0.08, hair);
-    b.box(0, s * 0.62, -s / 2 - 0.035, s + 0.08, s * 0.7, 0.08, hair);
-  };
-  switch (a.hair) {
-    case 'short':
-      cap();
-      b.box(0, s - 0.05, s / 2 + 0.03, s + 0.06, 0.12, 0.06, hair);
-      b.box(-s / 2 - 0.03, s * 0.75, 0, 0.07, s * 0.4, s * 0.9, hair);
-      b.box(s / 2 + 0.03, s * 0.75, 0, 0.07, s * 0.4, s * 0.9, hair);
+  // Head
+  b.box(0, s / 2, 0, s, s, s, a.skin);
+
+  // Face
+  const fz = s / 2 + 0.005;
+  const ink = '#2b2220';
+  const patch = worn(a, 'eyepatch');
+  for (const side of [-1, 1]) {
+    if (side === 1 && patch) continue; // the patch covers this eye
+    const x = side * s * 0.2;
+    switch (a.face.eyes) {
+      case 'round':
+        b.box(x, s * 0.48, fz, 0.08, 0.12, 0.02, ink);
+        b.box(x, s * 0.52, fz + 0.007, 0.03, 0.04, 0.01, '#ffffff');
+        break;
+      case 'happy': // ^ ^
+        b.box(x, s * 0.52, fz, 0.06, 0.03, 0.02, ink);
+        b.box(x - 0.04, s * 0.48, fz, 0.03, 0.06, 0.02, ink);
+        b.box(x + 0.04, s * 0.48, fz, 0.03, 0.06, 0.02, ink);
+        break;
+      case 'sleepy':
+        b.box(x, s * 0.46, fz, 0.1, 0.03, 0.02, ink);
+        break;
+      case 'none':
+        break;
+    }
+  }
+  if (a.face.cheeks) {
+    b.box(-s * 0.33, s * 0.32, fz, 0.1, 0.05, 0.02, '#f29c9c');
+    b.box(s * 0.33, s * 0.32, fz, 0.1, 0.05, 0.02, '#f29c9c');
+  }
+  const lip = shadeHex(a.skin, 0.5);
+  switch (a.face.mouth) {
+    case 'line':
+      b.box(0, s * 0.28, fz, 0.1, 0.03, 0.02, shadeHex(a.skin, 0.65));
       break;
-    case 'long':
-      cap();
-      b.box(0, s * 0.3, -s / 2 - 0.05, s + 0.12, s + 0.15, 0.12, hair);
-      b.box(-s / 2 - 0.04, s * 0.45, -0.02, 0.09, s * 0.95, s * 0.95, hair);
-      b.box(s / 2 + 0.04, s * 0.45, -0.02, 0.09, s * 0.95, s * 0.95, hair);
-      b.box(-s * 0.18, s - 0.06, s / 2 + 0.03, s * 0.55, 0.12, 0.06, hair);
+    case 'smile':
+      b.box(0, s * 0.26, fz, 0.08, 0.03, 0.02, lip);
+      b.box(-0.055, s * 0.29, fz, 0.03, 0.04, 0.02, lip);
+      b.box(0.055, s * 0.29, fz, 0.03, 0.04, 0.02, lip);
       break;
-    case 'spiky':
-      cap();
-      for (let i = 0; i < 5; i++) {
-        const x = (i - 2) * s * 0.2;
-        b.box(x, s + 0.2, (i % 2) * 0.08 - 0.04, 0.14, 0.26, 0.14, hair, { z: (i - 2) * 0.25 });
-      }
-      b.box(0, s - 0.04, s / 2 + 0.03, s + 0.04, 0.1, 0.06, hair);
-      break;
-    case 'bun':
-      cap();
-      b.box(0, s - 0.05, s / 2 + 0.03, s + 0.06, 0.1, 0.06, hair);
-      b.box(0, s + 0.24, -0.12, 0.26, 0.24, 0.26, shadeHex(hair, 0.95));
-      break;
-    case 'bob':
-      cap();
-      b.box(-s / 2 - 0.04, s * 0.5, 0, 0.09, s * 0.75, s + 0.06, hair);
-      b.box(s / 2 + 0.04, s * 0.5, 0, 0.09, s * 0.75, s + 0.06, hair);
-      b.box(0, s - 0.08, s / 2 + 0.03, s + 0.1, 0.16, 0.06, hair);
+    case 'open':
+      b.box(0, s * 0.27, fz, 0.1, 0.07, 0.02, '#6e2a2a');
+      b.box(0, s * 0.25, fz + 0.004, 0.06, 0.03, 0.02, '#e57373');
       break;
     case 'none':
       break;
   }
 
-  switch (a.accessory) {
-    case 'beanie':
-      b.box(0, s + 0.1, 0, s + 0.12, 0.26, s + 0.12, acc);
-      b.box(0, s - 0.02, 0, s + 0.14, 0.08, s + 0.14, shadeHex(acc, 0.8));
-      b.box(0, s + 0.3, 0, 0.14, 0.14, 0.14, '#ffffff');
+  // Hair. Every piece that hangs down reaches up to `root`, inside the cap, so there's no gap.
+  const root = s + 0.02;
+  const fullHat = a.accessories.some((x) => FULL_HATS.includes(x.kind));
+  const cap = () => {
+    span(0, s - 0.01, s + 0.13, 0, s + 0.08, s + 0.08, hair);
+    span(0, s * 0.27, root, -s / 2 - 0.035, s + 0.08, 0.08, hair);
+  };
+  switch (a.hair) {
+    case 'short':
+      cap();
+      span(0, s - 0.11, root, s / 2 + 0.03, s + 0.06, 0.06, hair);
+      span(-s / 2 - 0.03, s * 0.55, root, 0, 0.07, s * 0.9, hair);
+      span(s / 2 + 0.03, s * 0.55, root, 0, 0.07, s * 0.9, hair);
       break;
-    case 'crown': {
-      const y = s + (a.hair === 'none' ? 0.02 : 0.14);
-      b.box(0, y + 0.06, 0, s * 0.8, 0.12, s * 0.8, acc);
-      for (const [x, z] of [[-1, 1], [1, 1], [-1, -1], [1, -1], [0, 1]] as const) {
-        b.box((x * s * 0.8) / 2.3, y + 0.18, (z * s * 0.8) / 2.3, 0.08, 0.14, 0.08, acc);
+    case 'long':
+      cap();
+      span(0, -s * 0.2 - 0.075, root, -s / 2 - 0.05, s + 0.12, 0.12, hair);
+      span(-s / 2 - 0.04, -s * 0.03, root, -0.02, 0.09, s * 0.95, hair);
+      span(s / 2 + 0.04, -s * 0.03, root, -0.02, 0.09, s * 0.95, hair);
+      span(-s * 0.18, s - 0.12, root, s / 2 + 0.03, s * 0.55, 0.06, hair);
+      break;
+    case 'spiky':
+      cap();
+      if (!fullHat) {
+        for (let i = 0; i < 5; i++) {
+          const x = (i - 2) * s * 0.2;
+          b.box(x, s + 0.2, (i % 2) * 0.08 - 0.04, 0.14, 0.26, 0.14, hair, { z: (i - 2) * 0.25 });
+        }
       }
-      b.box(0, y + 0.08, s * 0.4 + 0.01, 0.07, 0.07, 0.02, '#e25d5d');
+      span(0, s - 0.09, root, s / 2 + 0.03, s + 0.04, 0.06, hair);
       break;
-    }
-    case 'flower': {
-      const cx = s / 2 + 0.02, cy = s * 0.88, cz = s * 0.15;
-      b.box(cx, cy, cz, 0.08, 0.08, 0.08, '#ffe066');
-      for (const [dy, dz] of [[0.09, 0], [-0.09, 0], [0, 0.09], [0, -0.09]] as const) b.box(cx, cy + dy, cz + dz, 0.07, 0.09, 0.09, acc);
+    case 'bun':
+      cap();
+      span(0, s - 0.1, root, s / 2 + 0.03, s + 0.06, 0.06, hair);
+      if (!fullHat) b.box(0, s + 0.24, -0.12, 0.26, 0.24, 0.26, shadeHex(hair, 0.95));
       break;
-    }
-    case 'headphones':
-      b.box(0, s + 0.14, 0, s + 0.2, 0.07, 0.1, '#3a3a44');
-      b.box(-s / 2 - 0.08, s * 0.5, 0, 0.12, 0.24, 0.24, acc);
-      b.box(s / 2 + 0.08, s * 0.5, 0, 0.12, 0.24, 0.24, acc);
-      b.box(-s / 2 - 0.08, s * 0.85, 0, 0.06, s * 0.5, 0.06, '#3a3a44');
-      b.box(s / 2 + 0.08, s * 0.85, 0, 0.06, s * 0.5, 0.06, '#3a3a44');
+    case 'bob':
+      cap();
+      span(-s / 2 - 0.04, s * 0.12, root, 0, 0.09, s + 0.06, hair);
+      span(s / 2 + 0.04, s * 0.12, root, 0, 0.09, s + 0.06, hair);
+      span(0, s - 0.16, root, s / 2 + 0.03, s + 0.1, 0.06, hair);
       break;
-    case 'glasses': {
-      const z = s / 2 + 0.03;
-      for (const x of [-s * 0.2, s * 0.2]) {
-        b.box(x, s * 0.58, z, 0.2, 0.03, 0.02, acc);
-        b.box(x, s * 0.38, z, 0.2, 0.03, 0.02, acc);
-        b.box(x - 0.1, s * 0.48, z, 0.03, 0.2, 0.02, acc);
-        b.box(x + 0.1, s * 0.48, z, 0.03, 0.2, 0.02, acc);
-      }
-      b.box(0, s * 0.52, z, 0.1, 0.03, 0.02, acc);
-      break;
-    }
-    case 'strawhat':
-      b.box(0, s + 0.04, 0, s * 1.7, 0.06, s * 1.7, '#e8cf8a');
-      b.box(0, s + 0.18, 0, s + 0.04, 0.24, s + 0.04, '#e8cf8a');
-      b.box(0, s + 0.1, 0, s + 0.06, 0.07, s + 0.06, acc);
-      break;
-    case 'scarf':
     case 'none':
       break;
+  }
+
+  // Head accessories
+  const top = s + (a.hair === 'none' ? 0 : 0.13); // top of the scalp or hair
+  let c: string | undefined;
+  if ((c = worn(a, 'beanie'))) {
+    b.box(0, s + 0.1, 0, s + 0.12, 0.26, s + 0.12, c);
+    b.box(0, s - 0.02, 0, s + 0.14, 0.08, s + 0.14, shadeHex(c, 0.8));
+    b.box(0, s + 0.3, 0, 0.14, 0.14, 0.14, '#ffffff');
+  }
+  if ((c = worn(a, 'crown'))) {
+    const y = top + 0.01;
+    b.box(0, y + 0.06, 0, s * 0.8, 0.12, s * 0.8, c);
+    for (const [x, z] of [[-1, 1], [1, 1], [-1, -1], [1, -1], [0, 1]] as const) {
+      b.box((x * s * 0.8) / 2.3, y + 0.18, (z * s * 0.8) / 2.3, 0.08, 0.14, 0.08, c);
+    }
+    b.box(0, y + 0.08, s * 0.4 + 0.01, 0.07, 0.07, 0.02, '#e25d5d');
+  }
+  if ((c = worn(a, 'strawhat'))) {
+    b.box(0, s + 0.04, 0, s * 1.7, 0.06, s * 1.7, '#e8cf8a');
+    b.box(0, s + 0.18, 0, s + 0.1, 0.26, s + 0.1, '#e8cf8a');
+    b.box(0, s + 0.1, 0, s + 0.12, 0.07, s + 0.12, c);
+  }
+  if ((c = worn(a, 'cap'))) {
+    b.box(0, s + 0.09, 0, s + 0.12, 0.2, s + 0.12, c);
+    b.box(0, s + 0.01, s / 2 + 0.16, s + 0.02, 0.05, 0.3, shadeHex(c, 0.85));
+    b.box(0, s + 0.21, 0, 0.08, 0.04, 0.08, shadeHex(c, 0.8));
+  }
+  if ((c = worn(a, 'wizardhat'))) {
+    b.box(0, s + 0.06, 0, s * 1.55, 0.06, s * 1.55, c);
+    b.box(0, s + 0.13, 0, s + 0.08, 0.08, s + 0.08, '#f2c14e');
+    for (let i = 0; i < 5; i++) {
+      const w = (s + 0.06) * (1 - i * 0.19);
+      b.box(0, s + 0.24 + i * 0.13, -i * 0.035, w, 0.14, w, c, { x: -0.08 * i });
+    }
+    b.box(s * 0.2, s + 0.3, s * 0.36, 0.08, 0.08, 0.02, '#f2c14e');
+  }
+  if ((c = worn(a, 'catears'))) {
+    for (const side of [-1, 1]) {
+      b.box(side * s * 0.3, top + 0.08, -0.02, 0.18, 0.18, 0.08, c, { z: side * -0.35 });
+      b.box(side * s * 0.3, top + 0.07, 0.025, 0.09, 0.1, 0.01, '#ffb6c8', { z: side * -0.35 });
+    }
+  }
+  if ((c = worn(a, 'bow'))) {
+    const x = -s * 0.22, y = top + 0.05, z = s * 0.05;
+    b.box(x - 0.1, y, z, 0.14, 0.14, 0.08, c, { z: 0.25 });
+    b.box(x + 0.1, y, z, 0.14, 0.14, 0.08, c, { z: -0.25 });
+    b.box(x, y, z, 0.07, 0.08, 0.1, shadeHex(c, 0.8));
+  }
+  if ((c = worn(a, 'flower'))) {
+    const sideHair = a.hair === 'bob' || a.hair === 'long' ? 0.09 : a.hair === 'short' ? 0.07 : 0;
+    const cx = s / 2 + 0.02 + sideHair, cy = s * 0.88, cz = s * 0.15;
+    b.box(cx, cy, cz, 0.08, 0.08, 0.08, '#ffe066');
+    for (const [dy, dz] of [[0.09, 0], [-0.09, 0], [0, 0.09], [0, -0.09]] as const) b.box(cx, cy + dy, cz + dz, 0.07, 0.09, 0.09, c);
+  }
+  if ((c = worn(a, 'headphones'))) {
+    b.box(0, top + 0.02, 0, s + 0.2, 0.07, 0.1, '#3a3a44');
+    b.box(-s / 2 - 0.08, s * 0.5, 0, 0.12, 0.24, 0.24, c);
+    b.box(s / 2 + 0.08, s * 0.5, 0, 0.12, 0.24, 0.24, c);
+    span(-s / 2 - 0.08, s * 0.6, top + 0.02, 0, 0.06, 0.06, '#3a3a44');
+    span(s / 2 + 0.08, s * 0.6, top + 0.02, 0, 0.06, 0.06, '#3a3a44');
+  }
+  if ((c = worn(a, 'glasses'))) {
+    const z = s / 2 + 0.03;
+    for (const x of [-s * 0.2, s * 0.2]) {
+      b.box(x, s * 0.58, z, 0.2, 0.03, 0.02, c);
+      b.box(x, s * 0.38, z, 0.2, 0.03, 0.02, c);
+      b.box(x - 0.1, s * 0.48, z, 0.03, 0.2, 0.02, c);
+      b.box(x + 0.1, s * 0.48, z, 0.03, 0.2, 0.02, c);
+    }
+    b.box(0, s * 0.52, z, 0.1, 0.03, 0.02, c);
+  }
+  if ((c = worn(a, 'sunglasses'))) {
+    const z = s / 2 + 0.03;
+    for (const x of [-s * 0.2, s * 0.2]) b.box(x, s * 0.47, z, 0.22, 0.14, 0.03, '#1d1d24');
+    b.box(0, s * 0.55, z + 0.005, s * 0.72, 0.035, 0.03, c);
+    for (const side of [-1, 1]) b.box(side * (s / 2 + 0.015), s * 0.55, s * 0.22, 0.02, 0.035, s * 0.56, c);
+  }
+  if ((c = worn(a, 'eyepatch'))) {
+    b.box(s * 0.2, s * 0.48, fz + 0.02, 0.16, 0.16, 0.03, c);
+    b.box(0, s * 0.64, 0, s + 0.03, 0.035, s + 0.03, shadeHex(c, 0.8));
+  }
+  if ((c = worn(a, 'mustache'))) {
+    b.box(0, s * 0.35, fz + 0.01, 0.2, 0.06, 0.03, c);
+    b.box(-0.12, s * 0.32, fz + 0.01, 0.06, 0.06, 0.03, c);
+    b.box(0.12, s * 0.32, fz + 0.01, 0.06, 0.06, 0.03, c);
+  }
+  if ((c = worn(a, 'beard'))) {
+    span(0, -0.06, s * 0.22, s / 2 + 0.03, s + 0.04, 0.08, c);
+    for (const side of [-1, 1]) span(side * (s / 2 + 0.02), 0, s * 0.5, s * 0.12, 0.06, s * 0.7, c);
+  }
+  if ((c = worn(a, 'earrings'))) {
+    for (const side of [-1, 1]) {
+      b.box(side * (s / 2 + 0.025), s * 0.22, s * 0.05, 0.04, 0.06, 0.04, c);
+      b.box(side * (s / 2 + 0.025), s * 0.12, s * 0.05, 0.06, 0.07, 0.06, shadeHex(c, 1.15));
+    }
   }
   return b.build();
 }
@@ -125,9 +224,30 @@ function buildTorso(a: Appearance, p: Proportions): THREE.BufferGeometry {
   b.box(0, p.torsoH / 2, 0, p.torsoW, p.torsoH, p.torsoD, a.shirt);
   b.box(0, 0.05, 0, p.torsoW + 0.02, 0.1, p.torsoD + 0.02, shadeHex(a.pants, 0.9)); // belt line
   b.box(0, p.torsoH * 0.62, p.torsoD / 2 + 0.01, 0.12, 0.12, 0.02, shadeHex(a.shirt, 0.8)); // pocket/badge
-  if (a.accessory === 'scarf') {
-    b.box(0, p.torsoH - 0.05, 0, p.torsoW + 0.06, 0.14, p.torsoD + 0.08, a.accessoryColor);
-    b.box(p.torsoW * 0.22, p.torsoH - 0.24, p.torsoD / 2 + 0.05, 0.14, 0.3, 0.06, a.accessoryColor);
+  const front = p.torsoD / 2;
+  let c: string | undefined;
+  if ((c = worn(a, 'scarf'))) {
+    b.box(0, p.torsoH - 0.05, 0, p.torsoW + 0.06, 0.14, p.torsoD + 0.08, c);
+    b.box(p.torsoW * 0.22, p.torsoH - 0.24, front + 0.05, 0.14, 0.3, 0.06, c);
+  }
+  if ((c = worn(a, 'necklace'))) {
+    for (const side of [-1, 1]) b.box(side * 0.07, p.torsoH - 0.09, front + 0.012, 0.03, 0.17, 0.02, '#e8d27a', { z: side * 0.55 });
+    b.box(0, p.torsoH - 0.2, front + 0.02, 0.08, 0.09, 0.03, c);
+  }
+  if ((c = worn(a, 'bowtie'))) {
+    b.box(-0.07, p.torsoH - 0.07, front + 0.02, 0.11, 0.11, 0.04, c);
+    b.box(0.07, p.torsoH - 0.07, front + 0.02, 0.11, 0.11, 0.04, c);
+    b.box(0, p.torsoH - 0.07, front + 0.03, 0.06, 0.07, 0.05, shadeHex(c, 0.8));
+  }
+  if ((c = worn(a, 'backpack'))) {
+    b.box(0, p.torsoH * 0.5, -front - 0.1, p.torsoW * 0.75, p.torsoH * 0.8, 0.2, c);
+    b.box(0, p.torsoH * 0.74, -front - 0.205, p.torsoW * 0.72, p.torsoH * 0.3, 0.02, shadeHex(c, 0.85));
+    for (const side of [-1, 1]) b.box(side * p.torsoW * 0.25, p.torsoH * 0.55, front + 0.01, 0.07, p.torsoH * 0.9, 0.02, shadeHex(c, 0.7));
+  }
+  if ((c = worn(a, 'cape'))) {
+    const y0 = -p.legH * 0.75, y1 = p.torsoH;
+    b.box(0, (y0 + y1) / 2, -front - 0.035, p.torsoW + 0.1, y1 - y0, 0.05, c);
+    b.box(0, p.torsoH - 0.03, 0, p.torsoW + 0.1, 0.08, p.torsoD + 0.1, shadeHex(c, 0.85));
   }
   return b.build();
 }

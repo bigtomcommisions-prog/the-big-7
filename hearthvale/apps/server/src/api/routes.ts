@@ -113,7 +113,10 @@ export function registerApiRoutes(app: FastifyInstance, d: Deps) {
     const { guildId } = GuildParams.parse(req.params);
     if (!d.voice.enabled) return reply.code(503).send({ error: 'Voice is not configured on this server.' });
     const { member } = await d.perms.member(guildId, user.id, true);
-    return { url: d.voice.url, token: await d.voice.token(guildId, user.id, member.displayName) };
+    // Publishing is only granted if Discord lets them talk where they're standing right now;
+    // the realtime server revokes/restores it live as they move or permissions change.
+    const canSpeak = await d.realtime().canSpeakNow(guildId, user.id);
+    return { url: d.voice.url, token: await d.voice.token(guildId, user.id, member.displayName, canSpeak), canSpeak };
   });
 
   /**
@@ -140,7 +143,7 @@ export function registerApiRoutes(app: FastifyInstance, d: Deps) {
     if (!p?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
       return reply.code(403).send({ error: "You don't have permission to join this voice channel in Discord." });
     }
-    const canSpeak = p.has(PermissionFlagsBits.Speak) && !member.isCommunicationDisabled();
+    const canSpeak = d.perms.speakBlock(member, channel ?? null) === null;
     const token = await d.bridges.playerToken(guildId, channelId, user.id, member.displayName, canSpeak);
     return { url: d.voice.url, token, canSpeak };
   });

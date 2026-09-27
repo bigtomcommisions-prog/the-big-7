@@ -248,6 +248,12 @@ export class Game {
         this.bridgeError = null;
         this.bridgeRetryAt = 0;
         break;
+      case 'voicePermission': {
+        const lost = !m.canSpeak && this.voice.canSpeakHere;
+        this.voice.setSpeakPermission(m.canSpeak, m.reason);
+        if (lost && this.voice.active && this.voice.hasMic && m.reason) this.hud.toasts.show(m.reason, 'info', 4000, 'micOff');
+        break;
+      }
       case 'discordSpeaking':
         this.npcs.setSpeaking(`voice:${m.channelId}`, m.userId, m.speaking);
         break;

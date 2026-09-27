@@ -13,7 +13,8 @@ import type { DiscordBot } from '../discord/bot.ts';
 import { ChatError, type MessageService } from '../discord/messages.ts';
 import { NotMemberError, type PermissionService } from '../discord/permissions.ts';
 import type { WorldService } from '../world/worldService.ts';
-import type { VoiceBridgeManager } from '../voice/bridge.ts';
+import { bridgeRoomName, type VoiceBridgeManager } from '../voice/bridge.ts';
+import { worldRoomName, type VoiceTokenIssuer } from '../voice/livekit.ts';
 import { GuildRoom, type Connection } from './guildRoom.ts';
 import { KeyedLimiter, TokenBucket } from './rateLimit.ts';
 
@@ -27,6 +28,15 @@ interface Deps {
   messages: MessageService;
   world: WorldService;
   bridges: VoiceBridgeManager;
+  voice: VoiceTokenIssuer;
+}
+
+/** Per-connection voice permission state. `chain` keeps LiveKit updates in order. */
+interface SpeakState {
+  can: boolean | null;
+  reason: string | null;
+  seq: number;
+  chain: Promise<void>;
 }
 
 const GUILD_ID = /^\d{5,25}$/;
@@ -43,10 +53,17 @@ export class RealtimeServer {
   private wss = new WebSocketServer({ noServer: true, maxPayload: 16 * 1024 });
   private rooms = new Map<string, GuildRoom>();
   private chatLimiter: KeyedLimiter;
+  private speakStates = new WeakMap<Connection, SpeakState>();
+  private speakTimer: NodeJS.Timeout;
 
   constructor(private d: Deps) {
     this.chatLimiter = new KeyedLimiter(d.config.CHAT_RATE_LIMIT, d.config.CHAT_RATE_WINDOW * 1000);
     this.wireDiscord();
+    // Timeouts and role changes don't reach us as events (no privileged member intent), so
+    // re-check everyone's voice permission periodically (member data is cached for 60s).
+    this.speakTimer = setInterval(() => {
+      for (const room of this.rooms.values()) for (const c of room.players.values()) void this.updateSpeak(room, c);
+    }, 30_000);
   }
 
   get stats() {
@@ -83,6 +100,7 @@ export class RealtimeServer {
     if (!room) {
       room = new GuildRoom(guildId, (r) => this.rooms.delete(r.guildId));
       room.onPlazaChange = (c, prev, next) => this.onPlazaChange(room!, c, prev, next);
+      room.onZoneChange = (c) => void this.updateSpeak(room!, c);
       this.rooms.set(guildId, room);
     }
     return room;
@@ -134,10 +152,12 @@ export class RealtimeServer {
       lastMoveAt: Date.now(),
       moved: true,
       plaza: null,
+      house: null,
     };
     const room = this.room(guildId);
     room.worldRadius = full.layout.radius;
     room.plazas = full.layout.plazas;
+    room.houses = full.layout.houses;
     room.add(conn);
     repos.activePlayers.join(userId, guildId);
     log.info({ user: user?.username, guild: guild.name, players: room.size }, 'Player joined world');
@@ -153,6 +173,7 @@ export class RealtimeServer {
       canSend: view.canSend,
       bridge: this.d.bridges.info(guildId),
     });
+    void this.updateSpeak(room, conn);
     // Tell everyone's NPC lists this person is now "really" here.
     this.refreshNpcs(guildId);
 
@@ -220,6 +241,49 @@ export class RealtimeServer {
     if (next) this.d.bridges.setOccupancy(room.guildId, next, count(next));
   }
 
+  /** Why this user can't talk in a house/gazebo (`channelId`) or out in the open (null); null if they can. */
+  private async speakBlock(guildId: string, userId: string, channelId: string | null): Promise<string | null> {
+    const { guild, member } = await this.d.perms.member(guildId, userId);
+    const channel = channelId ? guild.channels.cache.get(channelId) ?? null : null;
+    return this.d.perms.speakBlock(member, channel);
+  }
+
+  /** For minting voice tokens: may this player talk right now, where they're standing? */
+  async canSpeakNow(guildId: string, userId: string): Promise<boolean> {
+    const c = this.rooms.get(guildId)?.players.get(userId);
+    if (!c) return false;
+    return (await this.speakBlock(guildId, userId, c.house ?? c.plaza)) === null;
+  }
+
+  /**
+   * Re-evaluate whether a player may talk where they are. On a change, tell their client and
+   * enforce it in LiveKit (revoking publish unpublishes their mic), so a modified client can't
+   * talk anyway. `force` re-applies the LiveKit permission even if nothing changed.
+   */
+  private async updateSpeak(room: GuildRoom, c: Connection, force = false) {
+    let st = this.speakStates.get(c);
+    if (!st) this.speakStates.set(c, (st = { can: null, reason: null, seq: 0, chain: Promise.resolve() }));
+    const seq = ++st.seq;
+    let reason: string | null;
+    try {
+      reason = await this.speakBlock(room.guildId, c.info.id, c.house ?? c.plaza);
+    } catch {
+      reason = 'Could not verify your Discord permissions.';
+    }
+    if (seq !== st.seq || room.players.get(c.info.id) !== c) return; // superseded
+    const can = reason === null;
+    const changed = can !== st.can || reason !== st.reason;
+    st.can = can;
+    st.reason = reason;
+    if (changed) send(c.ws, { t: 'voicePermission', canSpeak: can, reason });
+    if (!changed && !force) return;
+    const plaza = c.plaza;
+    st.chain = st.chain.then(async () => {
+      await this.d.voice.setCanPublish(worldRoomName(room.guildId), c.info.id, can);
+      if (plaza) await this.d.voice.setCanPublish(bridgeRoomName(room.guildId, plaza), c.info.id, can);
+    });
+  }
+
   private viewableChannels(spec: { towns: { buildings: { channelId: string; active: boolean }[] }[] }): string[] {
     return spec.towns.flatMap((t) => t.buildings.filter((b) => b.active).map((b) => b.channelId));
   }
@@ -234,9 +298,13 @@ export class RealtimeServer {
         repos.characters.set(conn.info.id, msg.appearance);
         room.setAppearance(conn.info.id, msg.appearance);
         break;
-      case 'voice':
+      case 'voice': {
+        const joined = msg.connected && !conn.info.voice.connected;
         room.setVoice(conn.info.id, { muted: msg.muted, deafened: msg.deafened, connected: msg.connected });
+        // Their token may predate a permission change; make LiveKit match the current state.
+        if (joined) void this.updateSpeak(room, conn, true);
         break;
+      }
       case 'ping':
         send(conn.ws, { t: 'pong', n: msg.n });
         break;
@@ -303,6 +371,7 @@ export class RealtimeServer {
         try {
           const { member } = await perms.member(guildId, c.info.id);
           room.sendTo(c.info.id, { t: 'discordVoice', discordVoice: world.discordVoice(guild, member) });
+          void this.updateSpeak(room, c); // server mute may have changed
         } catch {
           /* member left the guild; they'll be dropped on next permission check */
         }
@@ -317,6 +386,7 @@ export class RealtimeServer {
       const layout = world.full(guildId)?.layout;
       room.worldRadius = layout?.radius ?? room.worldRadius;
       room.plazas = layout?.plazas ?? room.plazas;
+      room.houses = layout?.houses ?? room.houses;
       void Promise.all([...room.players.values()].map(async (c) => {
         try {
           const { member } = await perms.member(guildId, c.info.id);
@@ -324,6 +394,7 @@ export class RealtimeServer {
           if (!view) return;
           c.viewable = new Set(this.viewableChannels(view.spec));
           room.sendTo(c.info.id, { t: 'world', world: view.spec, version: view.version, canSend: view.canSend });
+          void this.updateSpeak(room, c);
         } catch {
           room.sendTo(c.info.id, { t: 'error', code: 'forbidden', message: 'You no longer have access to this server.' });
           c.ws.close(4003, 'forbidden');
@@ -342,6 +413,7 @@ export class RealtimeServer {
   }
 
   close() {
+    clearInterval(this.speakTimer);
     for (const r of this.rooms.values()) r.dispose();
     this.wss.close();
   }

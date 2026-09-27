@@ -118,6 +118,8 @@ export type ServerMessage =
   | { t: 'discordVoice'; discordVoice: DiscordVoiceMap }
   | { t: 'bridge'; bridge: BridgeInfo | null }
   | { t: 'discordSpeaking'; channelId: string; userId: string; speaking: boolean }
+  /** Whether you may talk where you're standing (decided by the server from Discord permissions). */
+  | { t: 'voicePermission'; canSpeak: boolean; reason: string | null }
   | { t: 'correct'; x: number; y: number; z: number }
   | { t: 'pong'; n: number }
   | { t: 'error'; code: string; message: string };

@@ -23,6 +23,8 @@ export function loginScreen(error?: string | null): HTMLElement {
         'We ask Discord for your username, avatar and server list. Messages you send from the world are posted to Discord as you. Voice chat is optional and only starts when you choose to join.')));
 }
 
+const DEV_SERVER_INVITE = 'https://discord.gg/GSwZqXPyf2';
+
 export function guildScreen(list: GuildList, onPick: (g: GuildSummary) => void, onLogout: () => void): HTMLElement {
   const joinable = list.joinable.map((g) =>
     h('button', { class: 'guild-card', type: 'button', onclick: () => onPick(g) }, guildIcon(g.name, g.icon), g.name));
@@ -38,7 +40,9 @@ export function guildScreen(list: GuildList, onPick: (g: GuildSummary) => void, 
         : h('p', { class: 'fineprint' }, "None of your servers have Hearthvale yet. If you manage a server, add the bot below — then it'll appear here."),
       invitable.length ? h('div', { class: 'section-title' }, 'Servers you manage without Hearthvale') : null,
       invitable.length ? h('div', { class: 'guild-grid' }, ...invitable) : null,
-      h('div', { style: 'margin-top:22px;display:flex;gap:8px;justify-content:center' },
+      h('a', { class: 'btn discord small', href: DEV_SERVER_INVITE, target: '_blank', rel: 'noopener noreferrer', style: 'margin-top:22px' },
+        icon('link'), 'Join the dev server to test it out!'),
+      h('div', { style: 'margin-top:14px;display:flex;gap:8px;justify-content:center' },
         h('button', { class: 'btn small', onclick: () => location.reload() }, icon('refresh'), 'Refresh'),
         h('button', { class: 'btn small', onclick: onLogout }, 'Log out'))));
 }

@@ -223,6 +223,7 @@ button, input, select { font: inherit; color: inherit; }
 .modal .close { position: absolute; top: 14px; right: 14px; }
 
 .char-layout { display: grid; grid-template-columns: 260px 1fr; gap: 18px; }
+@media (min-width: 641px) { .char-layout > :first-child { position: sticky; top: 0; align-self: start; } }
 @media (max-width: 640px) { .char-layout { grid-template-columns: 1fr; } }
 .char-preview { border-radius: 14px; background: linear-gradient(#cfe8f2, #f3e7d1); height: 320px; position: relative; overflow: hidden; }
 .char-preview canvas { width: 100% !important; height: 100% !important; }
@@ -236,6 +237,8 @@ button, input, select { font: inherit; color: inherit; }
 .swatch { width: 26px; height: 26px; border-radius: 8px; border: 3px solid #fff; box-shadow: 0 0 0 1px #d9c7aa; cursor: pointer; }
 .swatch.selected { box-shadow: 0 0 0 3px var(--leaf); }
 .swatches input[type='color'] { width: 30px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
+.accessory-color { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.accessory-color > span { min-width: 84px; font-weight: 800; font-size: 0.82rem; color: var(--ink-soft); text-transform: capitalize; }
 
 .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
 @media (max-width: 640px) { .settings-grid { grid-template-columns: 1fr; } }

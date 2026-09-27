@@ -52,6 +52,12 @@ export class VoiceManager {
   pttDown = false;
   mode: VoiceMode = 'voice-activity';
   hasMic = false;
+  /**
+   * Whether Discord permissions let us talk where we're standing. Set by the server, which also
+   * enforces it in LiveKit; locally it just keeps the UI honest and the mic muted.
+   */
+  canSpeakHere = true;
+  speakBlockReason: string | null = null;
 
   onChange: () => void = () => {};
   onSpeaking: (ids: Set<string>) => void = () => {};
@@ -172,7 +178,7 @@ export class VoiceManager {
       return;
     }
 
-    const room = new Room({ adaptiveStream: false, dynacast: false, disconnectOnPageLeave: true });
+    const room = new Room({ adaptiveStream: false, dynacast: false, disconnectOnPageLeave: true, stopLocalTrackOnUnpublish: false });
     this.room = room;
     room
       .on(RoomEvent.TrackSubscribed, (track, _pub, p) => this.attach(track, p))
@@ -187,7 +193,9 @@ export class VoiceManager {
 
     try {
       await room.connect(url, token, { autoSubscribe: false });
-      if (this.local) await room.localParticipant.publishTrack(this.local, { source: Track.Source.Microphone, dtx: true, red: true });
+      if (this.local && room.localParticipant.permissions?.canPublish !== false) {
+        await room.localParticipant.publishTrack(this.local, { source: Track.Source.Microphone, dtx: true, red: true });
+      }
       this.retries = 0;
       this.set('connected', this.connectedText());
       this.applyMic();
@@ -200,6 +208,7 @@ export class VoiceManager {
 
   private connectedText() {
     if (!this.hasMic) return this.statusText.includes('listening') ? this.statusText : 'Listening only';
+    if (!this.canSpeakHere) return "Can't talk here · listening";
     return this.mode === 'push-to-talk' ? 'Voice on · push to talk' : 'Voice on';
   }
 
@@ -303,7 +312,53 @@ export class VoiceManager {
 
   /** Is our mic actually transmitting right now? */
   get transmitting() {
-    return this.hasMic && !this.muted && !this.deafened && (this.mode === 'voice-activity' || this.pttDown);
+    return this.hasMic && this.canSpeakHere && !this.muted && !this.deafened && (this.mode === 'voice-activity' || this.pttDown);
+  }
+
+  /** The server decided whether we may talk where we're standing. */
+  setSpeakPermission(can: boolean, reason: string | null) {
+    const regained = can && !this.canSpeakHere;
+    this.canSpeakHere = can;
+    this.speakBlockReason = reason;
+    this.applyMic();
+    if (this.status === 'connected') this.statusText = this.connectedText();
+    if (regained) {
+      if (this.room && this.local) void this.republish(this.room, this.local);
+      if (this.bridgeRoom && this.local) void this.republishBridge(this.bridgeRoom);
+    }
+    this.onChange();
+  }
+
+  /** Wait (briefly) for LiveKit to grant publishing again, then put the mic back if it was removed. */
+  private async waitForPublish(room: Room): Promise<boolean> {
+    for (let i = 0; i < 30 && !room.localParticipant.permissions?.canPublish; i++) await new Promise((r) => setTimeout(r, 200));
+    return Boolean(room.localParticipant.permissions?.canPublish) && this.canSpeakHere;
+  }
+
+  private async republish(room: Room, track: LocalAudioTrack) {
+    if (!(await this.waitForPublish(room)) || this.room !== room || this.local !== track) return;
+    const published = [...room.localParticipant.audioTrackPublications.values()].some((p) => p.track === track);
+    try {
+      if (!published) await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone, dtx: true, red: true });
+    } catch (err) {
+      console.warn('Could not republish microphone', err);
+    }
+    this.applyMic();
+  }
+
+  private async republishBridge(room: Room) {
+    if (!(await this.waitForPublish(room)) || this.bridgeRoom !== room || !this.local) return;
+    this.bridgeCanSpeak = true;
+    if (!this.bridgeTrack) this.bridgeTrack = new LkLocalAudioTrack(this.local.mediaStreamTrack.clone(), undefined, true);
+    const track = this.bridgeTrack;
+    const published = [...room.localParticipant.audioTrackPublications.values()].some((p) => p.track === track);
+    try {
+      if (!published) await room.localParticipant.publishTrack(track, { source: Track.Source.Microphone, dtx: true, red: true });
+    } catch (err) {
+      console.warn('Could not republish to the Discord call', err);
+    }
+    this.applyMic();
+    this.onBridgeChange();
   }
 
   private applyMic() {
@@ -328,7 +383,7 @@ export class VoiceManager {
     this.bridgeJoining = true;
     try {
       const { url, token, canSpeak } = await fetchToken();
-      const room = new Room({ adaptiveStream: false, dynacast: false });
+      const room = new Room({ adaptiveStream: false, dynacast: false, stopLocalTrackOnUnpublish: false });
       this.bridgeRoom = room;
       const subscribeIfDiscord = (pub: { setSubscribed(b: boolean): void; kind: Track.Kind }, identity: string) => {
         if (identity === 'hearthvale-bridge' && pub.kind === Track.Kind.Audio) pub.setSubscribed(true);

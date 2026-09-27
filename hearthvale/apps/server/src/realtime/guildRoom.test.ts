@@ -27,6 +27,7 @@ function conn(id: string, x: number, z: number, viewable: string[] = []) {
     lastMoveAt: Date.now(),
     moved: true,
     plaza: null,
+    house: null,
   };
   return { c, sent };
 }
@@ -111,4 +112,33 @@ test('token cipher round-trips and detects tampering', () => {
   const parts = enc.split('.');
   parts[2] = Buffer.from('tampered').toString('base64url');
   assert.throws(() => c.decrypt(parts.join('.')));
+});
+
+test('entering and leaving a house or gazebo is detected (for voice permissions)', (t) => {
+  const room = new GuildRoom('g', () => undefined);
+  t.after(() => room.dispose());
+  room.houses = [{ channelId: 'text1', townKey: 't', name: 'general', kind: 'text', active: true, topic: null, x: 20, z: 0, ry: 0, w: 8, d: 6 } as GuildRoom['houses'][number]];
+  room.plazas = [{ channelId: 'vc1', x: -20, z: 0, radius: 5 }];
+  const a = conn('a', 12, 0);
+  room.add(a.c);
+  const zones: (string | null)[] = [];
+  // Pretend each step happens a second apart so the anti-teleport clamp doesn't shorten it.
+  const step = (x: number) => {
+    a.c.lastMoveAt = Date.now() - 1000;
+    room.move('a', x, 0, 0, 0, 'walk');
+  };
+  room.onZoneChange = (c) => zones.push(c.house ?? c.plaza);
+  step(14); // still outside
+  step(16);
+  step(19); // inside the house
+  step(20); // still inside: no event
+  step(25); // out the side
+  assert.deepEqual(zones, ['text1', null]);
+  step(8);
+  step(0);
+  step(-7);
+  step(-12);
+  step(-17); // into the gazebo
+  step(-10); // out again
+  assert.deepEqual(zones, ['text1', null, 'vc1', null]);
 });

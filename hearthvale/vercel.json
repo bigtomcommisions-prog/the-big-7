@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci",
-  "buildCommand": "VITE_BASE=/hearthvale/ VITE_API_ORIGIN=https://api.bigtomdev.fyi npm run build -w @hearthvale/client",
+  "buildCommand": "VITE_BASE=/hearthvale/ VITE_API_ORIGIN=https://api.bigtomdev.fyi VITE_SITE_URL=https://bigtomdev.fyi/hearthvale/ npm run build -w @hearthvale/client",
   "outputDirectory": "apps/client/dist",
   "framework": null,
   "redirects": [{ "source": "/", "destination": "/hearthvale/", "permanent": false }],

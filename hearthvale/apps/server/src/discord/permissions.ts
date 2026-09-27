@@ -61,6 +61,30 @@ export class PermissionService {
     return Boolean(p?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]));
   }
 
+  /**
+   * May this member talk (voice) where they're standing? `channel` is the house (text channel) or
+   * voice gazebo they're in, or null out in the open world. Returns null if allowed, otherwise
+   * the reason shown to the player.
+   *
+   * - Anywhere: not timed out, and not server-muted in Discord.
+   * - In a text channel's house: needs View Channel + Send Messages there.
+   * - In a voice channel's gazebo: needs View Channel + Connect + Speak there.
+   */
+  speakBlock(member: GuildMember, channel: GuildBasedChannel | null): string | null {
+    if (member.isCommunicationDisabled()) return "You're timed out in this server, so you can't talk.";
+    if (member.voice.serverMute) return "You're server-muted in Discord, so you can't talk.";
+    if (!channel) return null;
+    const p = channel.permissionsFor(member);
+    if (channel.isVoiceBased()) {
+      if (!p?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect, PermissionFlagsBits.Speak])) {
+        return `You don't have permission to speak in ${channel.name}.`;
+      }
+    } else if (!p?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])) {
+      return `You can't talk in #${channel.name}: you don't have permission to send messages there.`;
+    }
+    return null;
+  }
+
   /** What the bot itself can do in a channel (so we can explain failures instead of erroring). */
   botCan(channel: GuildBasedChannel, perms: bigint[]): boolean {
     const me = channel.guild.members.me;

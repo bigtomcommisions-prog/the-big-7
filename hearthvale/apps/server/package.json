@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "start:prod": "node --env-file=../../.env.production dist/index.js",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "tsx --test src/realtime/guildRoom.test.ts"
+    "test": "tsx --test src/realtime/guildRoom.test.ts src/discord/permissions.test.ts"
   },
   "dependencies": {
     "@discordjs/voice": "^0.19.2",

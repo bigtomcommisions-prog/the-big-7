@@ -87,15 +87,16 @@ export class Hud {
     const meter = h('div', { class: 'meter', title: 'Mic level' }, (this.meterFill = h('div')));
     const parts: (Node | null)[] = [
       h('button', {
-        class: `btn icon-btn ${v.muted || !v.hasMic ? 'off' : 'active'}`, title: v.hasMic ? (v.muted ? 'Unmute' : 'Mute') : 'No microphone',
+        class: `btn icon-btn ${v.muted || !v.hasMic || !v.canSpeakHere ? 'off' : 'active'}`,
+        title: !v.hasMic ? 'No microphone' : !v.canSpeakHere ? v.speakBlockReason ?? "You can't talk here" : v.muted ? 'Unmute' : 'Mute',
         disabled: !v.hasMic, onclick: () => this.handlers.onMute(),
-      }, icon(v.muted || !v.hasMic ? 'micOff' : 'mic')),
+      }, icon(v.muted || !v.hasMic || !v.canSpeakHere ? 'micOff' : 'mic')),
       h('button', {
         class: `btn icon-btn ${v.deafened ? 'off' : ''}`, title: v.deafened ? 'Undeafen' : 'Deafen (mute everyone)', onclick: () => this.handlers.onDeafen(),
       }, icon(v.deafened ? 'headphonesOff' : 'headphones')),
       v.hasMic ? meter : null,
-      h('div', { class: 'status' }, v.bridgeChannelId ? h('span', {}, icon('link'), ' Discord call · ') : '', v.statusText,
-        v.mode === 'push-to-talk' && v.hasMic ? h('div', { class: 'ptt-hint' }, v.pttDown ? h('span', {}, icon('live', '0.9em'), ' transmitting') : `hold ${keyLabel(pttKey)} to talk`) : null),
+      h('div', { class: 'status', title: v.canSpeakHere ? '' : v.speakBlockReason ?? '' }, v.bridgeChannelId ? h('span', {}, icon('link'), ' Discord call · ') : '', v.statusText,
+        v.mode === 'push-to-talk' && v.hasMic && v.canSpeakHere ? h('div', { class: 'ptt-hint' }, v.pttDown ? h('span', {}, icon('live', '0.9em'), ' transmitting') : `hold ${keyLabel(pttKey)} to talk`) : null),
       h('button', { class: 'btn small', title: 'Leave voice', onclick: () => this.handlers.onVoiceLeave() }, 'Leave'),
     ];
     bar.append(...parts.filter((n): n is Node => n !== null));

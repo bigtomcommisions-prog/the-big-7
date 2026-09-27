@@ -1,7 +1,7 @@
 import type { WebSocket } from 'ws';
 import {
-  ANIM_INDEX, NET, WORLD,
-  type Appearance, type ChatMessage, type NpcMap, type PlayerInfo, type PlayerUpdate, type ServerMessage, type VoiceFlags,
+  ANIM_INDEX, NET, WORLD, isInsideHouse,
+  type Appearance, type HouseLayout, type ChatMessage, type NpcMap, type PlayerInfo, type PlayerUpdate, type ServerMessage, type VoiceFlags,
 } from '@hearthvale/shared';
 
 export interface Connection {
@@ -15,6 +15,8 @@ export interface Connection {
   moved: boolean;
   /** Voice channel whose gazebo this player is standing in, if any. */
   plaza: string | null;
+  /** Text channel whose house this player is inside, if any. */
+  house: string | null;
 }
 
 function send(ws: WebSocket, msg: ServerMessage) {
@@ -35,7 +37,10 @@ export class GuildRoom {
   private timer: NodeJS.Timeout;
   worldRadius = 200;
   plazas: { channelId: string; x: number; z: number; radius: number }[] = [];
+  houses: HouseLayout[] = [];
   onPlazaChange: (c: Connection, prev: string | null, next: string | null) => void = () => {};
+  /** The player entered or left a house or gazebo. */
+  onZoneChange: (c: Connection) => void = () => {};
 
   constructor(readonly guildId: string, private onEmpty: (room: GuildRoom) => void) {
     this.timer = setInterval(() => this.tick(), 1000 / NET.SERVER_TICK_HZ);
@@ -102,11 +107,17 @@ export class GuildRoom {
     c.info.ry = ry;
     c.info.a = a;
     c.moved = true;
+    const prevPlaza = c.plaza;
     const plaza = this.plazas.find((p) => Math.hypot(nx - p.x, nz - p.z) < p.radius)?.channelId ?? null;
     if (plaza !== c.plaza) {
       const prev = c.plaza;
       c.plaza = plaza;
       this.onPlazaChange(c, prev, plaza);
+    }
+    const house = this.houses.find((h) => Math.hypot(nx - h.x, nz - h.z) < Math.max(h.w, h.d) && isInsideHouse(h, nx, nz, 0.2))?.channelId ?? null;
+    if (house !== c.house || plaza !== prevPlaza) {
+      c.house = house;
+      this.onZoneChange(c);
     }
     if (corrected) send(c.ws, { t: 'correct', x: nx, y: c.info.y, z: nz });
   }

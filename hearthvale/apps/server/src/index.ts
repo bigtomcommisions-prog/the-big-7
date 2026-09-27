@@ -43,7 +43,7 @@ const messages = new MessageService(bot, perms, repos, app.log);
 const world = new WorldService(bot, repos, perms, app.log);
 const voice = createVoiceTokenIssuer(config);
 const bridges = new VoiceBridgeManager(config, bot, app.log);
-const realtime = new RealtimeServer({ config, log: app.log, sessions, repos, bot, perms, messages, world, bridges });
+const realtime = new RealtimeServer({ config, log: app.log, sessions, repos, bot, perms, messages, world, bridges, voice });
 
 await app.register(cookie);
 // Only our own frontend origin may call the API with credentials (matters when the client is

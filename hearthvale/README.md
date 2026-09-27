@@ -2,6 +2,10 @@
 
 **Discord, but the server is a little world you can walk around in.**
 
+**Live at [bigtomdev.fyi/hearthvale](https://bigtomdev.fyi/hearthvale)**
+
+![A voxel village square surrounded by trees, houses and lamp-lit paths](apps/client/public/og-image.png)
+
 Hearthvale turns a Discord server into a cosy, persistent voxel world:
 
 | Discord | World |
@@ -11,7 +15,7 @@ Hearthvale turns a Discord server into a cosy, persistent voxel world:
 | Text / announcement channel | A house (announcements become towers) |
 | Voice channel | An open-air voice gazebo that mirrors who's in the Discord voice channel |
 | Member playing Hearthvale | A voxel character, animated and synced in real time |
-| Member active in Discord but not in the world | A translucent 💤 NPC by that channel's house |
+| Member active in Discord but not in the world | A translucent "away" NPC by that channel's house |
 | Message | A speech bubble over its author, plus the channel's in-house notice board |
 
 You log in with Discord, pick a server, walk through its towns, step into a channel's house to read and post real messages, and talk to nearby players with proximity voice.
@@ -32,6 +36,10 @@ You log in with Discord, pick a server, walk through its towns, step into a chan
   - [Security](#security)
   - [Database](#database)
 - [Production deployment](#production-deployment)
+  - [Current setup: Vercel + self-hosted backend](#current-setup-vercel--self-hosted-backend)
+  - [Moving the backend to another machine](#moving-the-backend-to-another-machine)
+  - [Link previews](#link-previews)
+  - [Single-server Docker alternative](#single-server-docker-alternative)
 - [Implemented features](#implemented-features)
 - [Known limitations](#known-limitations)
 - [Future improvements](#recommended-future-improvements)
@@ -63,7 +71,7 @@ Other scripts: `npm run typecheck`, `npm test` (generator, multiplayer room, rat
 2. **OAuth2** page:
    - Copy the **Client ID** into `DISCORD_CLIENT_ID`.
    - **Reset Secret** and copy it into `DISCORD_CLIENT_SECRET`.
-   - Under **Redirects**, add `http://localhost:5173/auth/callback`. For production, also add `https://your-domain/auth/callback`. It must exactly match `DISCORD_REDIRECT_URI`.
+   - Under **Redirects**, add `http://localhost:5173/auth/callback`. For production, also add the backend's callback (`https://api.bigtomdev.fyi/auth/callback`). It must exactly match `DISCORD_REDIRECT_URI`.
 3. **Bot** page:
    - **Reset Token** and copy it into `DISCORD_BOT_TOKEN`.
    - Under **Privileged Gateway Intents**, turn on **Message Content Intent**. Without it the bot receives empty message text. Presence and Server Members intents are **not** needed.
@@ -83,14 +91,14 @@ Other scripts: `npm run typecheck`, `npm test` (generator, multiplayer room, rat
 
 | Variable | Required | Description |
 |---|---|---|
-| `APP_ORIGIN` | ✓ | Public origin the browser uses (`http://localhost:5173` in dev). WebSocket upgrades from any other origin are rejected. |
+| `APP_ORIGIN` | ✓ | Public URL the browser uses (`http://localhost:5173` in dev, `https://bigtomdev.fyi/hearthvale` in prod). It may include a path; after login you're redirected there. Its origin is the only one allowed by CORS and on WebSocket upgrades. |
 | `PORT` | | Server port (default `3000`). |
 | `SESSION_SECRET` | ✓ | 32+ random characters. It encrypts stored Discord tokens. Generate with `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`. |
 | `DATABASE_URL` | | SQLite file (default `file:./data/hearthvale.db`). **Keep it outside OneDrive, Dropbox or other synced folders**: sync clients lock SQLite's files and the server hangs on startup. On Windows, for example: `file:C:/Users/<you>/AppData/Local/Hearthvale/hearthvale.db`. |
 | `DISCORD_CLIENT_ID` | ✓ | Application ID. |
 | `DISCORD_CLIENT_SECRET` | ✓ | OAuth2 client secret. **Server-only.** |
 | `DISCORD_BOT_TOKEN` | ✓ | Bot token. **Server-only.** |
-| `DISCORD_REDIRECT_URI` | ✓ | `<APP_ORIGIN>/auth/callback`. |
+| `DISCORD_REDIRECT_URI` | ✓ | The backend's `/auth/callback`: `http://localhost:5173/auth/callback` in dev, `https://api.bigtomdev.fyi/auth/callback` in prod. |
 | `LIVEKIT_URL` | voice | URL the **browser** uses to reach LiveKit (`ws://localhost:7880` in dev, `wss://voice.example.com` in prod). |
 | `LIVEKIT_API_KEY` / `LIVEKIT_API_SECRET` | voice | LiveKit credentials. **Secret is server-only.** Leave all three `LIVEKIT_*` blank to disable voice. |
 | `LIVEKIT_SERVER_URL` | | URL the *server* uses to reach LiveKit, if it differs from `LIVEKIT_URL` (for example an internal Docker hostname). |
@@ -98,6 +106,16 @@ Other scripts: `npm run typecheck`, `npm test` (generator, multiplayer room, rat
 | `CHAT_RATE_LIMIT` / `CHAT_RATE_WINDOW` | | Messages a player can send from the world: N per W seconds (default 5 per 10). |
 
 The server validates all of these on boot and prints a readable list of anything missing. `.env` is gitignored. No secret is ever sent to the browser.
+
+`npm run dev` reads `.env`. `npm run start:prod` reads `.env.production` instead (also gitignored), so dev and production can use different databases and URLs.
+
+**Client build variables.** These are baked into the static frontend at build time. They're public, so never put secrets in them.
+
+| Variable | Description |
+|---|---|
+| `VITE_BASE` | Path the site is served under, with leading and trailing `/` (default `/`; prod `/hearthvale/`). |
+| `VITE_API_ORIGIN` | Backend origin when it's on a different domain from the frontend (prod `https://api.bigtomdev.fyi`). Leave unset when one server serves both. |
+| `VITE_SITE_URL` | Absolute public URL of the site, used for [link previews](#link-previews) (prod `https://bigtomdev.fyi/hearthvale/`). |
 
 ## Project structure
 
@@ -121,7 +139,7 @@ hearthvale/
 │     ├─ discord/              # Gateway bot, permission checks, message bridge/webhooks
 │     ├─ world/worldService.ts # Discord structure → persisted slots → per-user world
 │     ├─ realtime/             # WebSocket hub, per-guild rooms (interest mgmt), rate limits
-│     ├─ voice/livekit.ts      # LiveKit token minting
+│     ├─ voice/                # LiveKit token minting, Discord voice bridge
 │     ├─ api/routes.ts         # REST: me, guilds, character, prefs, messages, voice token
 │     └─ db/                   # SQLite schema/migrations + repositories
 ├─ apps/client/                # Vite + three.js (no UI framework)
@@ -131,10 +149,12 @@ hearthvale/
 │     │  └─ assets/            # Voxel buildings, props, characters, text signs
 │     ├─ voice/voice.ts        # LiveKit + Web Audio spatialisation
 │     ├─ net/socket.ts         # Reconnecting WebSocket
-│     ├─ ui/                   # HUD, chat panel, character editor, settings, screens, Discord markdown
+│     ├─ ui/                   # HUD, chat panel, character editor, settings, screens, icons, Discord markdown
 │     └─ dev/                  # Dev-only sandbox & voice harness (not in prod builds)
+│  └─ public/                  # favicon, og-image.png (link preview)
 ├─ scripts/voice.mjs           # `npm run voice`
-├─ Dockerfile, docker-compose.yml, livekit.yaml
+├─ vercel.json, .vercelignore  # Frontend deployment
+├─ Dockerfile, docker-compose.yml, Caddyfile, livekit.yaml
 └─ .env.example
 ```
 
@@ -167,7 +187,7 @@ One Node process runs the HTTP API, the OAuth flow, the WebSocket server and the
   - `GUILD_UPDATE`, role updates
 
   New channels get new houses. Renamed channels get new signs. Channels moved to another category move to that town. **Deleted channels become boarded-up "closed" houses** for 3 days, then their plot is recycled. Connected players receive the new world live.
-- **Discord → world messages:** each `MESSAGE_CREATE` is delivered only to players who can view that channel. If the author is in the world, the bubble appears over their character. Otherwise a translucent NPC by the channel's house speaks it. The house's 💬 icon also pings.
+- **Discord → world messages:** each `MESSAGE_CREATE` is delivered only to players who can view that channel. If the author is in the world, the bubble appears over their character. Otherwise a translucent NPC by the channel's house speaks it. The house's message icon also pings.
 - **World → Discord messages:** step inside a house, press **Enter**, type and send. The server:
   1. re-fetches your member record
   2. re-checks `SendMessages` and timeouts
@@ -176,7 +196,7 @@ One Node process runs the HTTP API, the OAuth flow, the WebSocket server and the
 
   The message shows up in Discord and, instantly, in the world.
 - **Recent history** is fetched from Discord on demand when you enter a house, cached for 30 seconds in memory, and **never stored**.
-- **Voice channels** are mirrored read-only through `GUILD_VOICE_STATES`. Each voice channel's gazebo shows seated NPCs for the people currently in that Discord voice channel.
+- **Voice channels** are mirrored through `GUILD_VOICE_STATES`. Each voice channel's gazebo shows seated NPCs for the people currently in that Discord voice channel, and players can talk with them through the [voice bridge](#voice).
 
 ### World generation
 
@@ -253,6 +273,7 @@ I verified this end to end with two headless browsers through a real LiveKit ser
 - **Sessions:** opaque random cookie (`HttpOnly`, `SameSite=Lax`, `Secure` on HTTPS). The DB stores only a SHA-256 of the cookie value, and Discord tokens are encrypted with a key derived via HKDF from `SESSION_SECRET`.
 - **CSRF:** OAuth `state` cookie, SameSite cookies, a required `X-Hearthvale` header on mutating API calls, and an Origin check on WebSocket upgrades.
 - **Authorisation:** every membership and permission decision comes from Discord data fetched by the bot. Client-supplied IDs are only ever *lookups* that get re-checked.
+- **Voice follows Discord permissions:** the server tracks which house or gazebo each player is in and decides whether they may talk there. Inside a text channel's house you need Send Messages. In a voice gazebo you need Connect and Speak. Anywhere, being timed out or server-muted in Discord blocks talking. The server enforces this in LiveKit itself, revoking the player's publish permission so their mic is removed, not just greyed out in the UI. It re-checks on every zone change, permission change and voice-state change, and every 30 seconds for timeouts and role changes.
 - **Input:** zod schemas for all REST bodies and WebSocket messages. Messages are limited to 2000 characters, trimmed, and sent with mentions disabled.
 - **Rate limits:** global HTTP limit, per-route limits (history, voice tokens), a per-user chat token bucket, and a per-socket message flood guard.
 - **XSS:** Discord markdown is rendered by escaping everything first, then applying a fixed tag whitelist. Links must be http(s) and open with `noopener noreferrer`.
@@ -277,13 +298,56 @@ Message content is never stored. Discord IDs are the stable external keys everyw
 
 ## Production deployment
 
-The simplest setup is one Linux VPS (2 GB RAM or more) running `docker compose`. The stack is:
+The backend needs a long-running process (the Discord bot and WebSockets) and a persistent disk (SQLite), so it can't run on serverless hosts like Vercel or Netlify. The frontend is static files and can go anywhere.
+
+### Current setup: Vercel + self-hosted backend
+
+```
+Browser ──▶ bigtomdev.fyi/hearthvale ──▶ Vercel (static frontend)
+   │
+   ├──────▶ api.bigtomdev.fyi ──▶ Cloudflare Tunnel ──▶ backend (npm run start:prod, port 3000)
+   │
+   └──────▶ LiveKit Cloud (voice)
+```
+
+| Piece | Where | Cost |
+|---|---|---|
+| Frontend | Vercel, built with the command in `vercel.json` | Free (Hobby plan) |
+| Backend + Discord bot | Any always-on machine, reached through a Cloudflare Tunnel | Free (your own machine) |
+| Voice | LiveKit Cloud | Free tier |
+| DNS | Cloudflare: `@` A record `76.76.21.21` (Vercel, DNS only); `api` CNAME `<tunnel-id>.cfargotunnel.com` (proxied) | Domain only |
+
+- **Deploy the frontend:** `npx vercel --prod` from the repo root. `.vercelignore` keeps `.env*`, `data` and `tools` out of the upload. Vercel redirects `/` to `/hearthvale/`.
+- **Run the backend:** `npm run start:prod`. It builds the server and starts it with `.env.production`.
+- **Discord Developer Portal:** OAuth2 → Redirects must include `https://api.bigtomdev.fyi/auth/callback`.
+- The site only works while the backend machine is on. For a free always-on machine, an **Oracle Cloud Always Free** VM works well. Free tiers that sleep when idle (Render, Koyeb) disconnect the bot and lose the database, so avoid them.
+
+### Moving the backend to another machine
+
+1. Install **Node.js 24** (22.13+ minimum; the server uses the built-in `node:sqlite`).
+2. Copy the project **without** `node_modules`, `data`, `tools`, `apps/*/dist` or `apps/*/node_modules`. Then run `npm ci` on the new machine: the voice and Opus packages install different native builds per operating system.
+3. Copy `.env.production` privately (never commit it or send it over chat). Change `DATABASE_URL` to a path on the new machine **outside any synced folder** such as OneDrive.
+4. Optional: to keep characters and settings, stop the old server and copy its database file (`hearthvale-prod.db`) to that path.
+5. Install the tunnel connector. In Cloudflare, go to **Zero Trust → Networks → Tunnels**, open the tunnel, choose **Configure**, and run the `cloudflared service install <token>` command it shows for the new OS. DNS doesn't change.
+6. Start it with `npm run start:prod`. To survive reboots, use pm2 (`npm i -g pm2`, `pm2 start npm --name hearthvale -- run start:prod`, `pm2 save`, `pm2 startup`) or a systemd service.
+7. **Shut down the old machine's server and tunnel** (`cloudflared service uninstall`). If both run, Cloudflare splits visitors between two servers with separate databases.
+
+Vercel, Discord and LiveKit need no changes, because `api.bigtomdev.fyi` stays the same.
+
+### Link previews
+
+Pasting the link into Discord, Slack, X or iMessage shows a card with the title, description and `apps/client/public/og-image.png` (1200×630). The tags are in `apps/client/index.html`. Image URLs must be absolute, so they're built from `VITE_SITE_URL` at build time.
+
+- To change the image, replace `og-image.png` (PNG or JPG; SVG isn't supported by Discord) and redeploy.
+- Discord caches embeds. To see changes on an already-posted link, add a throwaway query string, for example `https://bigtomdev.fyi/hearthvale/?v=2`.
+
+### Single-server Docker alternative
+
+The simplest self-contained setup is one Linux VPS (2 GB RAM or more) running `docker compose`. The stack is:
 
 - **Caddy**: automatic HTTPS
 - **app**: web, WebSocket and Discord bot
 - **LiveKit**: voice
-
-The app needs a long-running process, a persistent disk and open UDP ports, so serverless hosts (Vercel, Netlify) won't work.
 
 1. **DNS:** point two A records at the server, for example `world.example.com` and `voice.example.com`.
 2. **Firewall:** open TCP `80`, `443` and `7881`, and UDP `50000-50100`.
@@ -306,7 +370,7 @@ The app needs a long-running process, a persistent disk and open UDP ports, so s
 
 Data lives in the `hearthvale-data` Docker volume; back it up.
 
-If you'd rather not run voice yourself, use [LiveKit Cloud](https://livekit.io/cloud) (free tier): set `LIVEKIT_URL/KEY/SECRET` to its values, remove the `livekit` service and the voice site from the Caddyfile, and set `LIVEKIT_SERVER_URL` to the same `wss://` URL. The app then runs on any host that supports Docker with a persistent volume and WebSockets, such as Railway, Fly.io or Render.
+If you'd rather not run voice yourself, use [LiveKit Cloud](https://livekit.io/cloud) (free tier): set `LIVEKIT_URL/KEY/SECRET` to its values, remove the `livekit` service and the voice site from the Caddyfile, and set `LIVEKIT_SERVER_URL` to the same `wss://` URL. The app then runs on any always-on host that supports Docker with a persistent volume and WebSockets, such as Railway or Fly.io (paid) or a free Oracle Cloud VM.
 
 ## Implemented features
 
@@ -317,12 +381,14 @@ If you'd rather not run voice yourself, use [LiveKit Cloud](https://livekit.io/c
 - ✅ Cosy voxel environment: trees (4 kinds), flowers, bushes, rocks, mushrooms, lamps with glow, benches, fences, crates, barrels, hay, mailboxes, creeks with bridges, a fountain square, sky dome, clouds, pollen motes, warm light and shadows, fog
 - ✅ Third-person controller: WASD, Shift to run, Space to jump (with coyote time), drag to look, scroll to zoom, collision with walls and props, standing on benches, bridges and crates, smooth camera that pulls in near walls
 - ✅ Real-time multiplayer with interest management, interpolation and server sanity checks
-- ✅ Voxel characters: 4 body types, 6 hair styles, 8 accessories, full colour customisation, 6 presets; walk, run, idle, jump and sit animations; saved per user
+- ✅ Voxel characters: 4 body types, 6 hair styles, optional facial features (eye and mouth styles, blush), 20 accessories worn up to 6 at once (one hat, eyewear, neck and back item each) with their own colours, 6 presets; walk, run, idle, jump and sit animations; saved per user
 - ✅ Speech bubbles (Discord formatting, capped length, stacking, fade-out, distance culling, configurable duration)
 - ✅ Channel panel inside houses: recent history, Discord formatting, sending as you through a webhook, send acknowledgement and errors, read-only state
-- ✅ Idle NPCs for recently active members who aren't in the world, clearly labelled "💤 … · away"; seated NPCs for members in Discord voice
+- ✅ Idle NPCs for recently active members who aren't in the world, clearly labelled "… · away"; seated NPCs for members in Discord voice
 - ✅ Proximity voice: spatial and stereo, wall occlusion, clear audio within the same room, speaking indicators, mute, deafen, push-to-talk, device selection, volume, listen-only fallback, reconnect
-- ✅ HUD (server, town and channel, connection status, character, settings, leave), toasts, loading and error screens, settings (voice, ambient volume, mouse sensitivity, bubble duration), procedural ambient birdsong and breeze
+- ✅ HUD (server, town and channel, connection status, character, settings, leave), toasts, loading and error screens, settings (voice, ambient volume, mouse sensitivity, bubble duration, brightness), procedural ambient birdsong and breeze
+- ✅ Discord voice bridge: talk with people in a Discord voice channel from its gazebo
+- ✅ Icon set (Lucide) across the UI and in-world signs, and a link-preview card when the URL is shared
 
 ## Known limitations
 
