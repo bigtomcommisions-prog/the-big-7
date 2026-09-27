@@ -1,0 +1,44 @@
+# Production stack: HTTPS proxy + app + LiveKit voice.
+#   https://$APP_DOMAIN   → app (HTTP + WebSocket + Discord bot)
+#   wss://$VOICE_DOMAIN   → LiveKit signalling (media goes over UDP 50000-50100 / TCP 7881)
+# Browsers only allow microphone access on HTTPS, so the proxy isn't optional.
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?set APP_DOMAIN in .env}
+      VOICE_DOMAIN: ${VOICE_DOMAIN:?set VOICE_DOMAIN in .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [app, livekit]
+
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: file:/app/data/hearthvale.db
+      # The app talks to LiveKit over the internal Docker network; browsers use LIVEKIT_URL.
+      LIVEKIT_SERVER_URL: ws://livekit:7880
+    volumes:
+      - hearthvale-data:/app/data
+
+  livekit:
+    image: livekit/livekit-server:v1.13
+    restart: unless-stopped
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml:ro
+    ports:
+      - "7881:7881"                    # ICE/TCP fallback
+      - "50000-50100:50000-50100/udp"  # voice media
+
+volumes:
+  hearthvale-data:
+  caddy-data:

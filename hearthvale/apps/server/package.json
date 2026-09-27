@@ -1,0 +1,35 @@
+{
+  "name": "@hearthvale/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --watch-preserve-output --import tsx src/index.ts",
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node22 --packages=external --outfile=dist/index.js --alias:@hearthvale/shared=../../packages/shared/src/index.ts",
+    "start": "node dist/index.js",
+    "start:prod": "node --env-file=../../.env.production dist/index.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "tsx --test src/realtime/guildRoom.test.ts"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "@fastify/cookie": "^11.1.2",
+    "@fastify/cors": "^11.3.0",
+    "@fastify/rate-limit": "^11.2.0",
+    "@fastify/static": "^10.1.5",
+    "@hearthvale/shared": "*",
+    "@livekit/rtc-node": "^1.1.0",
+    "discord.js": "^14.27.0",
+    "fastify": "^5.12.5",
+    "livekit-server-sdk": "^2.19.1",
+    "opusscript": "^0.1.1",
+    "ws": "^8.22.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.23.15"
+  }
+}

@@ -1,0 +1,6 @@
+.env
+.env.*
+tools
+data
+apps/server/dist
+node_modules

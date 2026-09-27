@@ -1,0 +1,16 @@
+# LiveKit SFU config for production (docker-compose.yml).
+# Replace the key/secret with long random values and put the same pair in .env
+# (LIVEKIT_API_KEY / LIVEKIT_API_SECRET). Docs: https://docs.livekit.io/home/self-hosting/deployment/
+port: 7880
+rtc:
+  tcp_port: 7881
+  port_range_start: 50000
+  port_range_end: 50100
+  use_external_ip: true
+keys:
+  CHANGE_ME_KEY: CHANGE_ME_TO_A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS
+logging:
+  level: info
+room:
+  # One room per Discord server; rooms close when empty.
+  empty_timeout: 300

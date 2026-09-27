@@ -1,0 +1,30 @@
+{
+  "name": "hearthvale",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Walk around your Discord server as a cosy voxel world.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev -w @hearthvale/server\" \"npm run dev -w @hearthvale/client\"",
+    "build": "npm run build -w @hearthvale/client && npm run build -w @hearthvale/server",
+    "start": "npm run start -w @hearthvale/server",
+    "start:prod": "npm run build -w @hearthvale/server && npm run start:prod -w @hearthvale/server",
+    "voice": "node scripts/voice.mjs",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
+}

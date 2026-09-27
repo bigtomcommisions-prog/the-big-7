@@ -1,0 +1,10 @@
+# Automatic HTTPS (Let's Encrypt) for both hostnames. Set APP_DOMAIN and VOICE_DOMAIN in .env
+# and point both DNS A records at this server before starting.
+{$APP_DOMAIN} {
+	encode gzip
+	reverse_proxy app:3000
+}
+
+{$VOICE_DOMAIN} {
+	reverse_proxy livekit:7880
+}
