@@ -3,6 +3,39 @@ import { VoiceManager } from '../voice/voice.ts';
 import { h } from './dom.ts';
 import { icon } from './icons.ts';
 import { keyLabel } from './hud.ts';
+import { LEGAL } from './legal.ts';
+import { ApiError, api } from '../api.ts';
+
+/** Save a JSON copy of everything Hearthvale stores about you. */
+async function downloadMyData() {
+  try {
+    const data = await api.exportData();
+    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    const a = h('a', { href: url, download: 'hearthvale-my-data.json' });
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (err) {
+    alert(err instanceof ApiError ? err.message : 'Could not download your data. Please try again.');
+  }
+}
+
+/** Permanently delete your Hearthvale data after a confirmation. */
+async function deleteMyData() {
+  const ok = confirm(
+    'Delete all your Hearthvale data?\n\n'
+    + "This removes your character, settings and login sessions, and revokes Hearthvale's access to your Discord account. "
+    + "Messages you already posted to Discord stay on Discord (delete them there if you want). This can't be undone.",
+  );
+  if (!ok) return;
+  try {
+    await api.deleteData();
+    location.href = `${import.meta.env.BASE_URL}?deleted=1`;
+  } catch (err) {
+    alert(err instanceof ApiError ? err.message : 'Could not delete your data. Please try again.');
+  }
+}
 
 /** Settings modal. Calls `onChange` with the full updated preferences on every edit. */
 export async function openSettings(root: HTMLElement, prefs: Preferences, onChange: (p: Preferences) => void, onLogout: () => void) {
@@ -69,7 +102,13 @@ export async function openSettings(root: HTMLElement, prefs: Preferences, onChan
         field('Mouse sensitivity', slider(0.1, 3, 0.05, p.mouseSensitivity, (mouseSensitivity) => set({ mouseSensitivity }))),
         field('Speech bubble duration (s)', slider(2, 30, 1, p.bubbleSeconds, (bubbleSeconds) => set({ bubbleSeconds }))),
         h('div', { class: 'settings-section' }, icon('account'), 'Account'),
-        h('div', {}, h('button', { class: 'btn danger small', onclick: () => { close(); onLogout(); } }, 'Log out')),
+        h('div', { class: 'account-actions' },
+          h('button', { class: 'btn small', onclick: () => void downloadMyData() }, 'Download my data'),
+          h('button', { class: 'btn small', onclick: () => void deleteMyData() }, 'Delete my data'),
+          h('button', { class: 'btn danger small', onclick: () => { close(); onLogout(); } }, 'Log out')),
+        h('p', { class: 'fineprint' },
+          'See the ', h('a', { href: LEGAL.privacy, target: '_blank', rel: 'noopener' }, 'Privacy Policy'), ' for what we store and why, and the ',
+          h('a', { href: LEGAL.terms, target: '_blank', rel: 'noopener' }, 'Terms of Service'), '.'),
       )));
   root.append(backdrop);
 }

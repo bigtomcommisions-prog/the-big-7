@@ -1,3 +1,8 @@
+// Self-hosted font (no requests to Google Fonts, so visitors' IPs aren't shared with Google).
+import '@fontsource/nunito/latin-500.css';
+import '@fontsource/nunito/latin-700.css';
+import '@fontsource/nunito/latin-800.css';
+import '@fontsource/nunito/latin-900.css';
 import './styles.css';
 import { DEFAULT_APPEARANCE, type GuildSummary, type Preferences } from '@hearthvale/shared';
 import { api, ApiError, type Me } from './api.ts';
@@ -31,7 +36,7 @@ async function logout() {
 
 async function boot() {
   const params = new URLSearchParams(location.search);
-  const authError = params.get('auth_error');
+  const authError = params.get('auth_error') ?? (params.has('deleted') ? 'deleted' : null);
   if (authError) history.replaceState(null, '', BASE);
 
   show(loadingScreen('Lighting the lanterns…'));

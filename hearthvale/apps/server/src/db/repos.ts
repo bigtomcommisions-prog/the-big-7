@@ -57,6 +57,32 @@ export function createRepos(db: Db) {
     get(id: string): UserRow | undefined {
       return db.prepare('SELECT id, username, global_name, avatar FROM users WHERE id = ?').get(id) as UserRow | undefined;
     },
+    /** Everything stored about a user, for a data-access request. Tokens are omitted (they're Discord's credentials, encrypted). */
+    export(id: string) {
+      const q = (sql: string) => db.prepare(sql).all(id) as Record<string, unknown>[];
+      return {
+        user: q('SELECT id, username, global_name, avatar, created_at, updated_at FROM users WHERE id = ?')[0] ?? null,
+        sessions: q('SELECT created_at, expires_at, last_seen_at FROM sessions WHERE user_id = ?'),
+        character: q('SELECT appearance, updated_at FROM characters WHERE user_id = ?').map((r) => ({ ...r, appearance: JSON.parse(String(r.appearance)) }))[0] ?? null,
+        preferences: q('SELECT prefs, updated_at FROM preferences WHERE user_id = ?').map((r) => ({ ...r, prefs: JSON.parse(String(r.prefs)) }))[0] ?? null,
+        messagesSentFromWorld: q('SELECT message_id, guild_id, channel_id, created_at FROM world_messages WHERE user_id = ?'),
+        activeWorlds: q('SELECT guild_id, connected_at FROM active_players WHERE user_id = ?'),
+      };
+    },
+    /** Erase a user and everything linked to them (right to erasure). */
+    deleteAll(id: string) {
+      db.exec('BEGIN');
+      try {
+        for (const table of ['sessions', 'characters', 'preferences', 'world_messages', 'active_players']) {
+          db.prepare(`DELETE FROM ${table} WHERE user_id = ?`).run(id);
+        }
+        db.prepare('DELETE FROM users WHERE id = ?').run(id);
+        db.exec('COMMIT');
+      } catch (err) {
+        db.exec('ROLLBACK');
+        throw err;
+      }
+    },
   };
 
   const sessions = {

@@ -251,3 +251,11 @@ button, input, select { font: inherit; color: inherit; }
   .hud-location { max-width: calc(100% - 28px); }
   .hud-actions { top: 68px; }
 }
+
+/* Legal links and account data controls */
+.legal-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin-top: 18px; font-size: 0.78rem; color: var(--ink-soft); }
+.legal-links a { color: inherit; font-weight: 700; }
+.legal-links a:hover { color: var(--ink); }
+.fineprint.consent { margin-top: 12px; }
+.fineprint a { color: inherit; font-weight: 800; }
+.account-actions { display: flex; flex-wrap: wrap; gap: 8px; }

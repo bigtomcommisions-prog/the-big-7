@@ -148,5 +148,26 @@ export function registerApiRoutes(app: FastifyInstance, d: Deps) {
     return { url: d.voice.url, token, canSpeak };
   });
 
+  /** Data access (UK GDPR Art. 15): a JSON copy of everything Hearthvale stores about you. */
+  app.get('/api/me/export', { config: { rateLimit: { max: 5, timeWindow: '1 minute' } } }, async (req, reply) => {
+    const { user } = auth(req);
+    reply.header('Content-Disposition', 'attachment; filename="hearthvale-my-data.json"');
+    return {
+      exportedAt: new Date().toISOString(),
+      note: 'Hearthvale does not store the content of your Discord messages or any voice audio. Discord tokens are stored encrypted and are not included.',
+      ...d.repos.users.export(user.id),
+    };
+  });
+
+  /** Erasure (UK GDPR Art. 17): log out everywhere, revoke Discord access, and delete all stored data. */
+  app.post('/api/me/delete', { config: { rateLimit: { max: 3, timeWindow: '1 minute' } } }, async (req, reply) => {
+    const { user } = auth(req);
+    await d.sessions.destroy(req, reply);
+    d.realtime().disconnectUser(user.id, 'Your Hearthvale data was deleted.');
+    d.repos.users.deleteAll(user.id);
+    req.log.info('A user deleted their Hearthvale data');
+    return { ok: true };
+  });
+
   app.get('/api/health', async () => ({ ok: true, discord: d.bot.ready, ...d.realtime().stats }));
 }

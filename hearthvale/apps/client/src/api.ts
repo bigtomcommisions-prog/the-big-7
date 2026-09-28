@@ -59,4 +59,6 @@ export const api = {
   bridgeToken: (guildId: string, channelId: string) =>
     request<{ url: string; token: string; canSpeak: boolean }>('POST', `/api/guilds/${guildId}/voice-bridge-token`, { channelId }),
   logout: () => request<{ ok: true }>('POST', '/auth/logout'),
+  exportData: () => request<unknown>('GET', '/api/me/export'),
+  deleteData: () => request<{ ok: true }>('POST', '/api/me/delete'),
 };

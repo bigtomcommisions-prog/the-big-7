@@ -226,6 +226,16 @@ export class RealtimeServer {
     ws.on('close', () => clearInterval(ka));
   }
 
+  /** Close every world connection a user has (e.g. after they delete their data). */
+  disconnectUser(userId: string, message: string) {
+    for (const room of this.rooms.values()) {
+      const c = room.players.get(userId);
+      if (!c) continue;
+      send(c.ws, { t: 'error', code: 'forbidden', message });
+      c.ws.close(4003, 'account deleted');
+    }
+  }
+
   /** Which gazebo (Discord voice channel) a player is standing in — used to authorise bridge tokens. */
   playerPlaza(guildId: string, userId: string): string | null {
     return this.rooms.get(guildId)?.players.get(userId)?.plaza ?? null;

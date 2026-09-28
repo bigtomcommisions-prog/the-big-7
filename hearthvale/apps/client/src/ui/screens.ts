@@ -2,12 +2,14 @@ import type { GuildSummary } from '@hearthvale/shared';
 import { API_ORIGIN, type GuildList } from '../api.ts';
 import { guildIcon, h } from './dom.ts';
 import { icon } from './icons.ts';
+import { consentLine, legalFooter } from './legal.ts';
 
 const AUTH_ERRORS: Record<string, string> = {
   access_denied: 'Discord sign-in was cancelled.',
   state_mismatch: 'That sign-in link expired. Please try again.',
   exchange_failed: "We couldn't complete sign-in with Discord. Please try again.",
   expired: 'Your session expired. Please log in again.',
+  deleted: 'Your Hearthvale data has been deleted and Discord access revoked.',
 };
 
 const logo = () => h('h1', { class: 'logo' }, 'Hearth', h('span', {}, 'vale'));
@@ -20,7 +22,9 @@ export function loginScreen(error?: string | null): HTMLElement {
       error ? h('div', { class: 'error-note' }, AUTH_ERRORS[error] ?? `Sign-in failed (${error}).`) : null,
       h('a', { class: 'btn discord', href: `${API_ORIGIN}/auth/login` }, 'Log in with Discord'),
       h('p', { class: 'fineprint' },
-        'We ask Discord for your username, avatar and server list. Messages you send from the world are posted to Discord as you. Voice chat is optional and only starts when you choose to join.')));
+        'We ask Discord for your username, avatar and server list. Messages you send from the world are posted to Discord as you. Voice chat is optional and only starts when you choose to join.'),
+      consentLine(),
+      legalFooter()));
 }
 
 const DEV_SERVER_INVITE = 'https://discord.gg/GSwZqXPyf2';
@@ -44,7 +48,8 @@ export function guildScreen(list: GuildList, onPick: (g: GuildSummary) => void, 
         icon('link'), 'Join the dev server to test it out!'),
       h('div', { style: 'margin-top:14px;display:flex;gap:8px;justify-content:center' },
         h('button', { class: 'btn small', onclick: () => location.reload() }, icon('refresh'), 'Refresh'),
-        h('button', { class: 'btn small', onclick: onLogout }, 'Log out'))));
+        h('button', { class: 'btn small', onclick: onLogout }, 'Log out')),
+      legalFooter()));
 }
 
 export function loadingScreen(text: string): HTMLElement {
@@ -57,5 +62,6 @@ export function errorScreen(text: string, actions: { label: string; onClick: () 
     h('div', { class: 'card panel' }, logo(),
       h('div', { class: 'error-note' }, text),
       h('div', { style: 'display:flex;gap:8px;justify-content:center' },
-        ...actions.map((a, i) => h('button', { class: `btn ${i === 0 ? 'primary' : ''}`, onclick: a.onClick }, a.label)))));
+        ...actions.map((a, i) => h('button', { class: `btn ${i === 0 ? 'primary' : ''}`, onclick: a.onClick }, a.label))),
+      legalFooter()));
 }

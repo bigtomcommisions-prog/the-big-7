@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@fontsource/nunito": "^5.3.0",
     "@hearthvale/shared": "*",
     "livekit-client": "^2.22.3",
     "lucide": "^1.48.0",

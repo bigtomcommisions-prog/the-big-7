@@ -1,0 +1,31 @@
+<article class="legal">
+  <h1>Cookie Policy</h1>
+  <p class="updated">Last updated: {{updated}}</p>
+
+  <p class="callout">In short: <strong>no tracking, advertising or analytics cookies</strong>. The Big Tom Dev website sets no cookies at all. Hearthvale sets two cookies that are strictly necessary for logging in, so there's no cookie banner to click through.</p>
+
+  <h2>What cookies are</h2>
+  <p>Cookies are small files a website stores in your browser. Under the UK Privacy and Electronic Communications Regulations (PECR), sites need your consent for cookies, <em>except</em> those strictly necessary to provide a service you've asked for. Everything we use falls into that exception.</p>
+
+  <h2>The Big Tom Dev website</h2>
+  <p>The home page, The Big 7 and the legal pages set <strong>no cookies</strong> and use no local storage.</p>
+
+  <h2>Hearthvale</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Name</th><th>Purpose</th><th>Duration</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td><code>hv_session</code></td><td>Keeps you logged in. It holds a random identifier; the server stores only a one-way hash of it.</td><td>14 days, or until you log out</td><td>Strictly necessary · first-party · HttpOnly, Secure, SameSite=Lax</td></tr>
+      <tr><td><code>hv_oauth_state</code></td><td>Protects the “Log in with Discord” step against forged login attempts (CSRF)</td><td>10 minutes, deleted after login</td><td>Strictly necessary · first-party · HttpOnly, Secure, SameSite=Lax</td></tr>
+    </tbody>
+  </table></div>
+  <p>Hearthvale doesn't use local storage or any similar browser storage. Your character and settings are saved on our server, linked to your account. If you allow microphone access, your browser remembers that choice itself. You can change it in your browser's site settings.</p>
+
+  <h2>Discord</h2>
+  <p>When you click “Log in with Discord”, you go to discord.com, which sets its own cookies under <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Discord's policies</a>. We don't control those.</p>
+
+  <h2>Managing cookies</h2>
+  <p>You can delete or block cookies in your browser settings. If you block Hearthvale's cookies, you won't be able to log in. Logging out removes <code>hv_session</code>.</p>
+
+  <h2>Contact</h2>
+  <p>Questions? Email <a href="mailto:{{contact}}">{{contact}}</a>. See also the <a href="/privacy/">Privacy Policy</a>.</p>
+</article>

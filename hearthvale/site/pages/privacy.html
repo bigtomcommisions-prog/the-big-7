@@ -1,0 +1,139 @@
+<article class="legal">
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: {{updated}}</p>
+
+  <p>This policy explains what personal data is collected when you use the Big Tom Dev website (<strong>bigtomdev.fyi</strong>) and <strong>Hearthvale</strong> (<strong>bigtomdev.fyi/hearthvale</strong>), why, and what your rights are. It is written to meet the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+
+  <nav class="toc" aria-label="Contents">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#who">Who we are</a></li>
+      <li><a href="#website">The website</a></li>
+      <li><a href="#hearthvale">Hearthvale</a></li>
+      <li><a href="#others">People who don't use Hearthvale</a></li>
+      <li><a href="#bases">Why we're allowed to use it</a></li>
+      <li><a href="#sharing">Who we share it with</a></li>
+      <li><a href="#transfers">International transfers</a></li>
+      <li><a href="#retention">How long we keep it</a></li>
+      <li><a href="#rights">Your rights</a></li>
+      <li><a href="#children">Children</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#changes">Changes and contact</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="who">1. Who we are</h2>
+  <p>The data controller is <strong>Big Tom Dev</strong>, an independent developer based in the United Kingdom. Contact: <a href="mailto:{{contact}}">{{contact}}</a>.</p>
+  <p>Big Tom Dev is a hobby project, not a company. There is no advertising, no analytics and no selling of data.</p>
+
+  <h2 id="website">2. The website</h2>
+  <p>The Big Tom Dev pages (the home page, The Big 7 and these legal pages) have no accounts, no forms, no cookies, no analytics and no third-party trackers. Fonts are hosted on our own site.</p>
+  <p>Like every website, the servers that deliver these pages see your <strong>IP address, browser type and the page requested</strong>. Our host, Vercel, processes this to deliver the site and protect it from abuse, and keeps short-term request logs.</p>
+  <p>If you email us, we receive your email address and message. Email to our address is forwarded by Cloudflare. We use it only to reply, and delete it once the conversation is finished, unless we need it to resolve a dispute.</p>
+
+  <h2 id="hearthvale">3. Hearthvale</h2>
+  <p>Hearthvale turns a Discord server into a 3D world. To do that it needs some data from Discord and from you.</p>
+
+  <h3>3.1 When you log in with Discord</h3>
+  <p>We ask Discord for two permissions (“scopes”): <code>identify</code> and <code>guilds</code>. We do <strong>not</strong> ask for your email address. We receive:</p>
+  <ul>
+    <li><strong>Your Discord user ID, username, display name and avatar</strong>. These are stored so we can recognise you and show your name and avatar in the world.</li>
+    <li><strong>The list of Discord servers you're in</strong>. This is used to show which of your servers have Hearthvale. It is kept in memory for a short time and not stored in our database.</li>
+    <li><strong>Discord access tokens</strong>. These let Hearthvale act on the permissions you granted. They are stored encrypted (AES-256-GCM) and revoked when you log out or delete your data.</li>
+  </ul>
+
+  <h3>3.2 What you create in Hearthvale</h3>
+  <ul>
+    <li><strong>Your character</strong> (body, hair, face, colours and accessories) and <strong>your settings</strong> (voice mode, push-to-talk key, device choices, volumes, brightness and similar). Both are stored so they're there next time.</li>
+    <li><strong>Your position and movement</strong> in a world. These are shared live with other players in the same world who are nearby, so they can see you. They are held in memory only and never stored.</li>
+  </ul>
+
+  <h3>3.3 Messages</h3>
+  <ul>
+    <li><strong>Messages you send from the world</strong> are posted to the real Discord channel under your name and avatar, using a Discord webhook. Once posted, they are on Discord and governed by <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Discord's Privacy Policy</a>. We store only <strong>metadata</strong> for 30 days: the message ID, server, channel and time. We use it to attribute messages correctly and to investigate abuse. We never store the text.</li>
+    <li><strong>Messages from the Discord channels you can view</strong> are shown to you as the notice board inside a house and as speech bubbles. They are fetched from Discord when needed, held in memory for up to 30 seconds (history) or 24 hours (see section 4), and <strong>not stored</strong>.</li>
+  </ul>
+
+  <h3>3.4 Voice chat</h3>
+  <ul>
+    <li>Voice is <strong>optional</strong>. Your browser only asks for your microphone when you click “Join voice”, and you can join listen-only.</li>
+    <li>Audio is sent in real time through <strong>LiveKit</strong>, a voice service, to players near you. <strong>Voice is never recorded or stored</strong> by Hearthvale.</li>
+    <li>If you stand in a voice channel's gazebo, the Hearthvale bot relays audio <strong>both ways</strong> between the world and that Discord voice channel. People in the Discord call can hear you, and you can hear them. The bot is visibly present in the Discord channel while this happens. Nothing is recorded.</li>
+  </ul>
+
+  <h3>3.5 Permissions and moderation checks</h3>
+  <p>Hearthvale checks your Discord roles and permissions (for example, whether you can view a channel, send messages, speak, or are timed out) so it only lets you do what Discord allows. This information is fetched through the bot and kept in memory for up to a minute.</p>
+
+  <h3>3.6 Cookies</h3>
+  <p>Hearthvale uses two strictly necessary cookies to keep you logged in and to protect the login. See the <a href="/cookies/">Cookie Policy</a>.</p>
+
+  <h3>3.7 Server logs</h3>
+  <p>The Hearthvale server keeps operational logs so problems can be fixed and abuse stopped. These logs include events such as a player joining or leaving a world (Discord username and server name), errors and security events. Logs are kept for no longer than 30 days.</p>
+
+  <h2 id="others">4. People who don't use Hearthvale</h2>
+  <p>When a Discord server adds the Hearthvale bot, some data about that server's members is shown in its world, <strong>only to other members of the same server who can see the relevant channel</strong>:</p>
+  <ul>
+    <li>If you recently posted in a channel, you may appear as a translucent <strong>“away” character</strong> by that channel's house, with your Discord display name, avatar and recent message. This is kept in memory for up to 24 hours and not stored.</li>
+    <li>If you're in a Discord voice channel, you appear seated in its gazebo. If a Hearthvale player joins that gazebo, the bot joins the call and your voice is relayed to them live (see 3.4).</li>
+  </ul>
+  <p>This is information those members could already see in Discord. Server administrators choose to add the bot and should tell their members. If you'd like to be excluded, contact us or ask your server's administrators.</p>
+
+  <h2 id="bases">5. Why we're allowed to use it (lawful bases)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Purpose</th><th>Lawful basis (UK GDPR Art. 6)</th></tr></thead>
+    <tbody>
+      <tr><td>Logging you in, saving your character and settings, running the world, posting your messages, voice chat you choose to join</td><td>Contract: providing the service you asked for</td></tr>
+      <tr><td>Permission checks, rate limiting, security logs, message metadata for abuse investigation</td><td>Legitimate interests: keeping the service safe and within Discord's rules</td></tr>
+      <tr><td>Showing server members' activity and voice presence to other members of that server (section 4)</td><td>Legitimate interests: making the world reflect the server, limited to what members can already see in Discord</td></tr>
+      <tr><td>Website request logs</td><td>Legitimate interests: delivering and securing the website</td></tr>
+      <tr><td>Microphone access</td><td>Your choice, given through your browser's permission prompt, and withdrawable at any time</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="sharing">6. Who we share it with</h2>
+  <p>We don't sell or rent personal data. We use these service providers, who process data on our behalf or as needed to run the service:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Provider</th><th>What for</th><th>Data involved</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Discord Inc.</strong> (USA)</td><td>Login, reading the server, posting messages, voice relay</td><td>Everything exchanged with Discord. Discord is an independent controller under its own <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</td></tr>
+      <tr><td><strong>Vercel Inc.</strong> (USA)</td><td>Hosting the website and Hearthvale's web page</td><td>IP address, browser details, request logs</td></tr>
+      <tr><td><strong>Cloudflare Inc.</strong> (USA)</td><td>DNS, secure connection to the Hearthvale server, email forwarding</td><td>IP address, request data, emails you send us</td></tr>
+      <tr><td><strong>LiveKit Inc.</strong> (USA)</td><td>Voice chat</td><td>IP address, Discord user ID and display name, live audio (not recorded)</td></tr>
+    </tbody>
+  </table></div>
+  <p>We may also disclose data if the law requires it, or to protect people from harm.</p>
+
+  <h2 id="transfers">7. International transfers</h2>
+  <p>The providers above are based in the United States. Where personal data leaves the UK, it is protected by the UK Extension to the EU–US Data Privacy Framework, or by the UK International Data Transfer Addendum and standard contractual clauses, as provided in each provider's data protection terms.</p>
+
+  <h2 id="retention">8. How long we keep it</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Data</th><th>Kept for</th></tr></thead>
+    <tbody>
+      <tr><td>Discord profile (ID, username, display name, avatar), character, settings</td><td>Until you delete your data</td></tr>
+      <tr><td>Login session and encrypted Discord tokens</td><td>14 days, or until you log out or delete your data</td></tr>
+      <tr><td>Metadata of messages sent from the world</td><td>30 days</td></tr>
+      <tr><td>Server logs</td><td>Up to 30 days</td></tr>
+      <tr><td>Server list, positions, permission checks, message history and activity shown in the world</td><td>In memory only, for seconds to 24 hours. Never stored.</td></tr>
+      <tr><td>Voice audio</td><td>Not kept. Real-time only.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="rights">9. Your rights</h2>
+  <p>Under UK GDPR you can ask to <strong>access</strong>, <strong>correct</strong>, <strong>delete</strong> or <strong>receive a copy</strong> of your data, and to <strong>restrict</strong> or <strong>object to</strong> how we use it. You can do the main ones yourself in Hearthvale, under <strong>Settings → Account</strong>:</p>
+  <ul>
+    <li><strong>Download my data</strong> gives you a copy of everything Hearthvale stores about you, as a JSON file.</li>
+    <li><strong>Delete my data</strong> permanently erases your profile, character, settings, sessions and message metadata, logs you out everywhere and revokes Hearthvale's access to your Discord account.</li>
+  </ul>
+  <p>You can also remove Hearthvale's access at any time in Discord under <strong>User Settings → Authorised Apps</strong>. For anything else, email <a href="mailto:{{contact}}">{{contact}}</a>. We'll reply within one month.</p>
+  <p>If you're unhappy with how we handle your data, you can complain to the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener noreferrer">ico.org.uk</a>. We'd appreciate the chance to sort it out first.</p>
+
+  <h2 id="children">10. Children</h2>
+  <p>Hearthvale is for people aged <strong>13 or over</strong>, the minimum age to use Discord, or older where local law requires it. We don't knowingly collect data from younger children. If you believe we have, contact us and we'll delete it.</p>
+
+  <h2 id="security">11. Security</h2>
+  <p>All connections use HTTPS. Discord tokens are encrypted at rest. Session cookies are stored only as one-way hashes. Every action is re-checked against Discord's own permissions on the server. No system is perfectly secure, but we take reasonable care to protect your data, and we'll tell you and the ICO if a breach puts you at risk.</p>
+
+  <h2 id="changes">12. Changes and contact</h2>
+  <p>If this policy changes, we'll update the date at the top. For significant changes, we'll also say so in Hearthvale. Questions? Email <a href="mailto:{{contact}}">{{contact}}</a>.</p>
+</article>

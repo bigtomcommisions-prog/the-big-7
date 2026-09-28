@@ -334,6 +334,27 @@ Browser ──▶ bigtomdev.fyi/hearthvale ──▶ Vercel (static frontend)
 
 Vercel, Discord and LiveKit need no changes, because `api.bigtomdev.fyi` stays the same.
 
+### Big Tom Dev site
+
+The same Vercel project also serves the Big Tom Dev site around Hearthvale:
+
+| Path | Page |
+|---|---|
+| `/` | Home: collections of bigger projects |
+| `/the-big-7/` | The Big 7: Hearthvale showcase plus six "coming soon" slots |
+| `/privacy/`, `/terms/`, `/cookies/` | Legal pages covering the site and Hearthvale |
+| `/hearthvale/` | The Hearthvale app |
+
+- The pages are HTML fragments in `site/pages/`, and the styles, logo and images are in `site/assets/`.
+- `node scripts/build-site.mjs` (also `npm run build:site`) wraps each page in the shared banner (logo, "Big Tom Dev", tabs) and footer. It writes the result into `apps/client/dist/` next to the app, and Vercel runs it after the client build.
+- The contact email and the "last updated" date for the legal pages are set at the top of `scripts/build-site.mjs`.
+- To fill one of the Big 7 slots, replace its `<section class="slot">` in `site/pages/big7.html`.
+
+**Privacy features in Hearthvale:**
+- Settings → Account has **Download my data** (`GET /api/me/export`) and **Delete my data** (`POST /api/me/delete`). Delete erases every row for the user, revokes the Discord token and disconnects them.
+- The login screen shows a consent line and legal links.
+- Fonts are self-hosted, so there are no Google Fonts requests.
+
 ### Link previews
 
 Pasting the link into Discord, Slack, X or iMessage shows a card with the title, description and `apps/client/public/og-image.png` (1200×630). The tags are in `apps/client/index.html`. Image URLs must be absolute, so they're built from `VITE_SITE_URL` at build time.
