@@ -1,22 +1,42 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci",
-  "buildCommand": "VITE_BASE=/hearthvale/ VITE_API_ORIGIN=https://api.bigtomdev.fyi VITE_SITE_URL=https://bigtomdev.fyi/hearthvale/ npm run build -w @hearthvale/client && node scripts/build-site.mjs",
+  "buildCommand": "npm run build:vercel",
   "outputDirectory": "apps/client/dist",
   "framework": null,
   "trailingSlash": true,
   "rewrites": [
-    { "source": "/hearthvale/:path*", "destination": "/hearthvale/index.html" }
+    {
+      "source": "/hearthvale/:path*",
+      "destination": "/hearthvale/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "microphone=(self), camera=(), geolocation=(), interest-cohort=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "microphone=(self), camera=(), geolocation=(), interest-cohort=()"
+        }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/omniprice.js": {
+      "maxDuration": 30
+    }
+  }
 }

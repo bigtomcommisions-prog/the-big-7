@@ -355,6 +355,57 @@ The same Vercel project also serves the Big Tom Dev site around Hearthvale:
 - The login screen shows a consent line and legal links.
 - Fonts are self-hosted, so there are no Google Fonts requests.
 
+### OmniPrice
+
+OmniPrice (`/omniprice/`, project 02 of The Big 7) tracks and compares prices: food, wages, energy, commodities, currencies, crypto, inflation and interest rates. Stocks and ETFs are included once a key is set.
+
+| Part | Where |
+|---|---|
+| App (Vite + TypeScript + uPlot) | `apps/omniprice/`, built into `apps/client/dist/omniprice/` |
+| Data API (Vercel Function) | `api/omniprice.js` → `api/_omniprice/` (catalogue, fetchers, handler) |
+| Source check | `npm run check:omniprice`: fetches every series and flags failures or stale data |
+
+- **Run it locally:** `npm run dev:omniprice` → <http://localhost:5174/omniprice/>. The Vite dev server runs the same API handler.
+- **Sources:**
+  - FRED CSV (public domain BLS, EIA and Federal Reserve series; IMF commodities; OECD)
+  - ONS time series (OGL v3)
+  - ECB reference rates via Frankfurter
+  - CoinGecko
+  - Twelve Data (stocks)
+
+  S&P, Dow Jones and Nasdaq index levels are not used, because their licences forbid redistribution. Stock exposure is shown through ETFs instead.
+- **Optional environment variables (Vercel → Settings → Environment Variables):**
+  - `TWELVE_DATA_API_KEY` turns on the Stocks & ETFs category. A free key from twelvedata.com is enough, since the 8 tickers fit its per-minute limit.
+  - `FRED_API_KEY` switches FRED requests to the official API, which is more reliable than the CSV download. The key is free from fred.stlouisfed.org.
+- **Adding a series:** add an entry to `INSTRUMENTS` in `api/_omniprice/catalog.js`, run `npm run check:omniprice <id>`, then deploy. Only use sources whose licence allows public display, and credit them in `SOURCES`.
+- **Caching:** data is cached in the function's memory and at Vercel's CDN (30 minutes for daily series, 6 hours for monthly), so upstream providers see very little traffic.
+- **What's covered:** 141 series, including 52 currency pairs (every ECB currency against GBP, plus the main USD and EUR pairs) and 39 wage series (UK pay by sector from the ONS, US pay by industry from the BLS, and the US minimum wage).
+- **Display currency:** the "Prices in" menu passes `cur=XXX` to the API, which converts money series (those with a `ccy`) using ECB rates: the daily rate for daily and weekly data, and the period average for monthly and quarterly data. Rates, indices and percentages are never converted. The choice is kept in `localStorage` (`omniprice.currency`), which the Cookie Policy lists.
+- **FRED throttling:** FRED can temporarily block an IP that makes many CSV requests quickly. In production, set `FRED_API_KEY` so the function uses the official API.
+
+### Homebase
+
+Homebase (`/homebase/`, project 03 of The Big 7) is a private browser start page. It's a from-scratch rebuild inspired by the "VoidTab" page in [limehell/browser-home-page](https://github.com/limehell/browser-home-page). No code was copied: that repository has no licence.
+
+| Part | Where |
+|---|---|
+| App (Vite + TypeScript, no framework) | `apps/homebase/`, built into `apps/client/dist/homebase/` |
+| Themes | `src/themes/`: `gl.ts` (WebGL fragment shaders), `particles.ts` (canvas 2D), `index.ts` (registry + customisable params) |
+| Renderer | `src/engine.ts`: DPR-aware sizing, adaptive resolution, pause when hidden, reduced-motion support, CSS fallback without WebGL |
+| Widgets | `src/widgets/` (20 widgets; settings forms are generated from each widget's `fields`) |
+| Settings & guide | `src/ui/panel.ts` (themes, customise, look, widgets, general, data), `src/ui/guide.ts` (browser setup tutorials with browser detection) |
+
+- **Run it locally:** `npm run dev:homebase` → <http://localhost:5175/homebase/>. The currency and market widgets call the OmniPrice API through the same dev middleware.
+- **Storage:** everything lives in the browser. Settings are in `localStorage` (`homebase.v1`), photos in IndexedDB (`homebase`), and weather is cached for 20 minutes. Users can back up and restore via Customise → Data.
+- **Adding a theme:** add a `ThemeDef` to `THEMES`. `params` automatically become controls in the Customise tab. Use `glScene(canvas, fragmentShader, uniformsFn)` for shaders, or the `canvas2d` helper for particles.
+- **Adding a widget:** export a `WidgetDef` and list it in `src/widgets/index.ts`. Any `fields` automatically become its settings dialog.
+- **Third-party services:**
+  - Open-Meteo (weather, CC BY 4.0, credited in the widget)
+  - DuckDuckGo icons (on by default, can be turned off)
+  - the user's chosen search engine
+
+  All of these are disclosed in the Privacy Policy.
+
 ### Link previews
 
 Pasting the link into Discord, Slack, X or iMessage shows a card with the title, description and `apps/client/public/og-image.png` (1200×630). The tags are in `apps/client/index.html`. Image URLs must be absolute, so they're built from `VITE_SITE_URL` at build time.

@@ -20,12 +20,11 @@ const LAST_UPDATED = '28 September 2026';
 const TABS = [
   { id: 'home', label: 'Home', href: '/' },
   { id: 'big7', label: 'The Big 7', href: '/the-big-7/' },
-  { id: 'hearthvale', label: 'Hearthvale', href: '/hearthvale/' },
 ];
 
 const PAGES = [
   { out: 'index.html', src: 'home.html', tab: 'home', title: 'Big Tom Dev', description: "Big Tom Dev's projects and collections, including The Big 7." },
-  { out: 'the-big-7/index.html', src: 'big7.html', tab: 'big7', title: 'The Big 7 · Big Tom Dev', description: 'Seven projects, built one at a time. Starting with Hearthvale: your Discord server as a cosy voxel world.' },
+  { out: 'the-big-7/index.html', src: 'big7.html', tab: 'big7', title: 'The Big 7 · Big Tom Dev', description: 'Seven projects, built one at a time: Hearthvale, a Discord server as a cosy voxel world; OmniPrice, the price of everything; and Homebase, a beautiful private start page.' },
   { out: 'privacy/index.html', src: 'privacy.html', tab: null, title: 'Privacy Policy · Big Tom Dev', description: 'How Big Tom Dev and Hearthvale handle your personal data.' },
   { out: 'terms/index.html', src: 'terms.html', tab: null, title: 'Terms of Service · Big Tom Dev', description: 'The terms for using Big Tom Dev sites and Hearthvale.' },
   { out: 'cookies/index.html', src: 'cookies.html', tab: null, title: 'Cookie Policy · Big Tom Dev', description: 'The cookies and similar technologies Big Tom Dev sites use.' },

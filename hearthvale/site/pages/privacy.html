@@ -2,7 +2,7 @@
   <h1>Privacy Policy</h1>
   <p class="updated">Last updated: {{updated}}</p>
 
-  <p>This policy explains what personal data is collected when you use the Big Tom Dev website (<strong>bigtomdev.fyi</strong>) and <strong>Hearthvale</strong> (<strong>bigtomdev.fyi/hearthvale</strong>), why, and what your rights are. It is written to meet the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+  <p>This policy explains what personal data is collected when you use the Big Tom Dev website (<strong>bigtomdev.fyi</strong>), <strong>Hearthvale</strong> (<strong>bigtomdev.fyi/hearthvale</strong>) , <strong>OmniPrice</strong> (<strong>bigtomdev.fyi/omniprice</strong>) and <strong>Homebase</strong> (<strong>bigtomdev.fyi/homebase</strong>), why, and what your rights are. It is written to meet the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
 
   <nav class="toc" aria-label="Contents">
     <strong>Contents</strong>
@@ -10,6 +10,8 @@
       <li><a href="#who">Who we are</a></li>
       <li><a href="#website">The website</a></li>
       <li><a href="#hearthvale">Hearthvale</a></li>
+      <li><a href="#omniprice">OmniPrice</a></li>
+      <li><a href="#homebase">Homebase</a></li>
       <li><a href="#others">People who don't use Hearthvale</a></li>
       <li><a href="#bases">Why we're allowed to use it</a></li>
       <li><a href="#sharing">Who we share it with</a></li>
@@ -51,7 +53,7 @@
   <h3>3.3 Messages</h3>
   <ul>
     <li><strong>Messages you send from the world</strong> are posted to the real Discord channel under your name and avatar, using a Discord webhook. Once posted, they are on Discord and governed by <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Discord's Privacy Policy</a>. We store only <strong>metadata</strong> for 30 days: the message ID, server, channel and time. We use it to attribute messages correctly and to investigate abuse. We never store the text.</li>
-    <li><strong>Messages from the Discord channels you can view</strong> are shown to you as the notice board inside a house and as speech bubbles. They are fetched from Discord when needed, held in memory for up to 30 seconds (history) or 24 hours (see section 4), and <strong>not stored</strong>.</li>
+    <li><strong>Messages from the Discord channels you can view</strong> are shown to you as the notice board inside a house and as speech bubbles. They are fetched from Discord when needed, held in memory for up to 30 seconds (history) or 24 hours (see section 6), and <strong>not stored</strong>.</li>
   </ul>
 
   <h3>3.4 Voice chat</h3>
@@ -70,7 +72,31 @@
   <h3>3.7 Server logs</h3>
   <p>The Hearthvale server keeps operational logs so problems can be fixed and abuse stopped. These logs include events such as a player joining or leaving a world (Discord username and server name), errors and security events. Logs are kept for no longer than 30 days.</p>
 
-  <h2 id="others">4. People who don't use Hearthvale</h2>
+  <h2 id="omniprice">4. OmniPrice</h2>
+  <p>OmniPrice shows published prices and statistics. It has <strong>no accounts, no cookies and no analytics</strong>, and it does not collect personal data about you.</p>
+  <ul>
+    <li><strong>How it works:</strong> your browser asks our server (a Vercel Function at <code>bigtomdev.fyi/api/omniprice</code>) for data. Our server fetches the figures from the data providers listed in the <a href="/terms/#omniprice">Terms</a>. <strong>Your browser never contacts those providers</strong>, so they don't receive your IP address.</li>
+    <li><strong>Request logs:</strong> Vercel sees your IP address, browser details and the addresses you request, which can include which prices you looked at. It uses these to deliver and secure the service, as described in section 2. We don't link this to you or use it for profiling.</li>
+    <li><strong>Comparisons:</strong> what you choose to compare is kept only in the page's address (the part after <code>#</code>) while you use it. It is not sent to or stored by our server. If you share a comparison link, the recipient sees the same selection.</li>
+    <li><strong>Display currency:</strong> if you choose a currency under “Prices in”, your choice (for example <code>GBP</code>) is saved in your browser's local storage on your device, so it's remembered next time. It is sent to our server only as that currency code, to convert the figures. Choose “Original currencies” to remove it.</li>
+  </ul>
+
+  <h2 id="homebase">5. Homebase</h2>
+  <p>Homebase is a start page that runs entirely in your browser. There are <strong>no accounts</strong>, and <strong>we never receive your settings or anything you type into it</strong>.</p>
+  <ul>
+    <li><strong>Stored on your device only:</strong> your theme and layout choices, widgets and everything in them (notes, to-dos, links, countdowns, your name for greetings) are kept in your browser's local storage. Photos you add are kept in its IndexedDB storage. Weather forecasts are cached for 20 minutes. Remove it all with <strong>Customise → Data → Reset everything</strong>, or by clearing this site's data in your browser.</li>
+    <li><strong>Services your browser contacts directly</strong>, only when you use the matching feature:
+      <ul>
+        <li><strong>Open-Meteo</strong> (weather widget): receives the place you type, or its coordinates, and your IP address, to return the forecast.</li>
+        <li><strong>DuckDuckGo's icon service</strong> (for the icons on quick links): receives the web addresses of your quick links and your IP address. It's on by default. Turn off “Show website icons on quick links” in Customise → General to stop it.</li>
+        <li><strong>Your chosen search engine</strong>: when you search, your query goes to that engine under its own privacy policy.</li>
+        <li><strong>OmniPrice</strong> (currency and market widgets): our own data server, described in section 4.</li>
+      </ul>
+    </li>
+    <li><strong>Backups</strong> you download are files on your device. We never see them.</li>
+  </ul>
+
+  <h2 id="others">6. People who don't use Hearthvale</h2>
   <p>When a Discord server adds the Hearthvale bot, some data about that server's members is shown in its world, <strong>only to other members of the same server who can see the relevant channel</strong>:</p>
   <ul>
     <li>If you recently posted in a channel, you may appear as a translucent <strong>“away” character</strong> by that channel's house, with your Discord display name, avatar and recent message. This is kept in memory for up to 24 hours and not stored.</li>
@@ -78,35 +104,37 @@
   </ul>
   <p>This is information those members could already see in Discord. Server administrators choose to add the bot and should tell their members. If you'd like to be excluded, contact us or ask your server's administrators.</p>
 
-  <h2 id="bases">5. Why we're allowed to use it (lawful bases)</h2>
+  <h2 id="bases">7. Why we're allowed to use it (lawful bases)</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>Purpose</th><th>Lawful basis (UK GDPR Art. 6)</th></tr></thead>
     <tbody>
       <tr><td>Logging you in, saving your character and settings, running the world, posting your messages, voice chat you choose to join</td><td>Contract: providing the service you asked for</td></tr>
       <tr><td>Permission checks, rate limiting, security logs, message metadata for abuse investigation</td><td>Legitimate interests: keeping the service safe and within Discord's rules</td></tr>
-      <tr><td>Showing server members' activity and voice presence to other members of that server (section 4)</td><td>Legitimate interests: making the world reflect the server, limited to what members can already see in Discord</td></tr>
-      <tr><td>Website request logs</td><td>Legitimate interests: delivering and securing the website</td></tr>
+      <tr><td>Showing server members' activity and voice presence to other members of that server (section 6)</td><td>Legitimate interests: making the world reflect the server, limited to what members can already see in Discord</td></tr>
+      <tr><td>Website and OmniPrice request logs</td><td>Legitimate interests: delivering and securing the website</td></tr>
       <tr><td>Microphone access</td><td>Your choice, given through your browser's permission prompt, and withdrawable at any time</td></tr>
     </tbody>
   </table></div>
 
-  <h2 id="sharing">6. Who we share it with</h2>
+  <h2 id="sharing">8. Who we share it with</h2>
   <p>We don't sell or rent personal data. We use these service providers, who process data on our behalf or as needed to run the service:</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Provider</th><th>What for</th><th>Data involved</th></tr></thead>
     <tbody>
       <tr><td><strong>Discord Inc.</strong> (USA)</td><td>Login, reading the server, posting messages, voice relay</td><td>Everything exchanged with Discord. Discord is an independent controller under its own <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</td></tr>
-      <tr><td><strong>Vercel Inc.</strong> (USA)</td><td>Hosting the website and Hearthvale's web page</td><td>IP address, browser details, request logs</td></tr>
+      <tr><td><strong>Vercel Inc.</strong> (USA)</td><td>Hosting the website, Hearthvale's web page and the OmniPrice app and data server</td><td>IP address, browser details, request logs</td></tr>
       <tr><td><strong>Cloudflare Inc.</strong> (USA)</td><td>DNS, secure connection to the Hearthvale server, email forwarding</td><td>IP address, request data, emails you send us</td></tr>
+      <tr><td><strong>Open-Meteo</strong> (Switzerland)</td><td>Weather in Homebase, contacted directly by your browser</td><td>IP address, the place you look up</td></tr>
+      <tr><td><strong>DuckDuckGo</strong> (USA)</td><td>Website icons on Homebase quick links (can be turned off)</td><td>IP address, the web addresses of your quick links</td></tr>
       <tr><td><strong>LiveKit Inc.</strong> (USA)</td><td>Voice chat</td><td>IP address, Discord user ID and display name, live audio (not recorded)</td></tr>
     </tbody>
   </table></div>
   <p>We may also disclose data if the law requires it, or to protect people from harm.</p>
 
-  <h2 id="transfers">7. International transfers</h2>
+  <h2 id="transfers">9. International transfers</h2>
   <p>The providers above are based in the United States. Where personal data leaves the UK, it is protected by the UK Extension to the EU–US Data Privacy Framework, or by the UK International Data Transfer Addendum and standard contractual clauses, as provided in each provider's data protection terms.</p>
 
-  <h2 id="retention">8. How long we keep it</h2>
+  <h2 id="retention">10. How long we keep it</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>Data</th><th>Kept for</th></tr></thead>
     <tbody>
@@ -116,10 +144,12 @@
       <tr><td>Server logs</td><td>Up to 30 days</td></tr>
       <tr><td>Server list, positions, permission checks, message history and activity shown in the world</td><td>In memory only, for seconds to 24 hours. Never stored.</td></tr>
       <tr><td>Voice audio</td><td>Not kept. Real-time only.</td></tr>
+      <tr><td>Homebase</td><td>Kept only in your browser until you delete it. We hold nothing.</td></tr>
+      <tr><td>OmniPrice</td><td>Nothing is stored about you. Hosting request logs are kept by Vercel for a short period.</td></tr>
     </tbody>
   </table></div>
 
-  <h2 id="rights">9. Your rights</h2>
+  <h2 id="rights">11. Your rights</h2>
   <p>Under UK GDPR you can ask to <strong>access</strong>, <strong>correct</strong>, <strong>delete</strong> or <strong>receive a copy</strong> of your data, and to <strong>restrict</strong> or <strong>object to</strong> how we use it. You can do the main ones yourself in Hearthvale, under <strong>Settings → Account</strong>:</p>
   <ul>
     <li><strong>Download my data</strong> gives you a copy of everything Hearthvale stores about you, as a JSON file.</li>
@@ -128,12 +158,12 @@
   <p>You can also remove Hearthvale's access at any time in Discord under <strong>User Settings → Authorised Apps</strong>. For anything else, email <a href="mailto:{{contact}}">{{contact}}</a>. We'll reply within one month.</p>
   <p>If you're unhappy with how we handle your data, you can complain to the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener noreferrer">ico.org.uk</a>. We'd appreciate the chance to sort it out first.</p>
 
-  <h2 id="children">10. Children</h2>
+  <h2 id="children">12. Children</h2>
   <p>Hearthvale is for people aged <strong>13 or over</strong>, the minimum age to use Discord, or older where local law requires it. We don't knowingly collect data from younger children. If you believe we have, contact us and we'll delete it.</p>
 
-  <h2 id="security">11. Security</h2>
+  <h2 id="security">13. Security</h2>
   <p>All connections use HTTPS. Discord tokens are encrypted at rest. Session cookies are stored only as one-way hashes. Every action is re-checked against Discord's own permissions on the server. No system is perfectly secure, but we take reasonable care to protect your data, and we'll tell you and the ICO if a breach puts you at risk.</p>
 
-  <h2 id="changes">12. Changes and contact</h2>
+  <h2 id="changes">14. Changes and contact</h2>
   <p>If this policy changes, we'll update the date at the top. For significant changes, we'll also say so in Hearthvale. Questions? Email <a href="mailto:{{contact}}">{{contact}}</a>.</p>
 </article>

@@ -13,8 +13,12 @@
   },
   "scripts": {
     "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev -w @hearthvale/server\" \"npm run dev -w @hearthvale/client\"",
+    "dev:omniprice": "npm run dev -w @bigtomdev/omniprice",
+    "dev:homebase": "npm run dev -w @bigtomdev/homebase",
     "build": "npm run build -w @hearthvale/client && npm run build -w @hearthvale/server",
     "build:site": "node scripts/build-site.mjs",
+    "build:vercel": "node scripts/build-vercel.mjs",
+    "check:omniprice": "node scripts/check-omniprice.mjs",
     "start": "npm run start -w @hearthvale/server",
     "start:prod": "npm run build -w @hearthvale/server && npm run start:prod -w @hearthvale/server",
     "voice": "node scripts/voice.mjs",

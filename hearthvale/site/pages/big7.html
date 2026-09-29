@@ -2,11 +2,11 @@
   <p class="eyebrow">A Big Tom Dev collection</p>
   <h1>The <span class="grad-text">Big 7</span></h1>
   <p class="lead">Seven projects, built one at a time. Each one gets its own space here as it goes live.</p>
-  <div class="progress" style="margin-top:18px"><span class="pips"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></span> 1 of 7 live</div>
+  <div class="progress" style="margin-top:18px"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></span> 3 of 7 live</div>
   <ul class="big7-index" aria-label="Projects in The Big 7">
     <li><a class="live" href="#hearthvale">01 · Hearthvale</a></li>
-    <li><a href="#project-02">02</a></li>
-    <li><a href="#project-03">03</a></li>
+    <li><a class="live" href="#omniprice">02 · OmniPrice</a></li>
+    <li><a class="live" href="#homebase">03 · Homebase</a></li>
     <li><a href="#project-04">04</a></li>
     <li><a href="#project-05">05</a></li>
     <li><a href="#project-06">06</a></li>
@@ -40,20 +40,73 @@
   <p class="hv-legal">Log in with Discord to play. See the <a href="/privacy/#hearthvale">Hearthvale privacy section</a> and the <a href="/terms/">Terms of Service</a>. Not affiliated with Discord.</p>
 </section>
 
+<section class="op" id="omniprice" aria-labelledby="op-title">
+  <div class="op-top">
+    <img class="op-shot" src="/assets/omniprice-shot.jpg" width="1200" height="760" loading="lazy"
+         alt="OmniPrice comparing egg prices, US hourly pay and wheat over ten years, each indexed to 100" />
+    <div>
+      <p class="project-num">PROJECT 02</p>
+      <h2 class="op-title" id="op-title">Omni<span>Price</span></h2>
+      <p class="op-tagline">The price of everything, in one place, and side by side.</p>
+      <span class="op-status">Live · free, no account needed</span>
+      <div class="op-actions">
+        <a class="btn primary" href="/omniprice/">{{icon:ChartLine}} Open OmniPrice</a>
+        <a class="btn" href="/omniprice/#/compare?ids=us-eggs,us-hourly-pay&amp;range=10y">{{icon:GitCompareArrows}} Try a comparison</a>
+      </div>
+      <ul class="op-pills" aria-label="What it tracks">
+        <li>Food</li><li>Wages</li><li>Energy</li><li>Commodities</li><li>Currencies</li><li>Crypto</li><li>Inflation</li><li>Stocks <small>soon</small></li>
+      </ul>
+    </div>
+  </div>
+  <div class="op-features">
+    <div class="op-feature"><h3>{{icon:Layers}} Everything together</h3><p>Groceries, pay, oil, wheat, currencies, crypto and inflation, on one board.</p></div>
+    <div class="op-feature"><h3>{{icon:GitCompareArrows}} Compare anything</h3><p>Up to five series on one chart, each indexed to 100, whatever it is measured in.</p></div>
+    <div class="op-feature"><h3>{{icon:Clock}} Priced in work time</h3><p>US groceries shown as minutes of work at the average wage, now and a decade ago.</p></div>
+    <div class="op-feature"><h3>{{icon:Landmark}} Official sources</h3><p>ONS, US Bureau of Labor Statistics, IMF, ECB and EIA data, credited on every chart.</p></div>
+    <div class="op-feature"><h3>{{icon:History}} Decades of history</h3><p>From the last month back to 1947, with high, low and average for any range.</p></div>
+    <div class="op-feature"><h3>{{icon:ShieldCheck}} Private by design</h3><p>No account, no cookies and no tracking. Data is fetched by our server, not your browser.</p></div>
+  </div>
+  <p class="op-legal">For information only, not financial advice. See the <a href="/terms/#omniprice">OmniPrice terms</a> and <a href="/privacy/#omniprice">privacy notes</a>.</p>
+</section>
+
+<section class="hb" id="homebase" aria-labelledby="hb-title">
+  <div class="hb-top">
+    <div>
+      <p class="project-num">PROJECT 03</p>
+      <h2 class="hb-title" id="hb-title">Home<span>base</span></h2>
+      <p class="hb-tagline">A beautiful start page that’s entirely yours, and entirely private.</p>
+      <span class="hb-status">Live · free · nothing leaves your browser</span>
+      <div class="hb-actions">
+        <a class="btn primary" href="/homebase/">{{icon:House}} Open Homebase</a>
+        <a class="btn" href="/homebase/#/setup">{{icon:Settings}} Set it as your home page</a>
+      </div>
+      <ul class="hb-themes" aria-label="Some of the themes">
+        <li style="--c:#8a5cff">Event Horizon</li><li style="--c:#35ff9f">Aurora</li><li style="--c:#ff2d95">Synthwave</li><li style="--c:#ff5f8f">Liquid Gradient</li>
+        <li style="--c:#ff9a3c">Lava Lamp</li><li style="--c:#35ff6b">Digital Rain</li><li style="--c:#f7a8c4">Sakura</li><li style="--c:#ffe98a">Firefly Forest</li>
+        <li style="--c:#9ad0ff">Snowfall</li><li style="--c:#ffb86b">Ocean Sunset</li><li style="--c:#4fb8ff">City Rain</li><li style="--c:#cfd8ff">Warp Speed</li>
+        <li style="--c:#c2410c">Paper</li><li style="--c:#39ff88">Terminal</li><li style="--c:#7c9cff">Midnight</li><li style="--c:#ffffff">Your Photo</li>
+      </ul>
+    </div>
+    <img class="hb-shot" src="/assets/homebase-shot.jpg" width="1612" height="1012" loading="lazy"
+         alt="Four Homebase themes: a black hole, a synthwave sunset, the northern lights and falling cherry blossom" />
+  </div>
+  <div class="hb-features">
+    <div class="hb-feature"><h3>{{icon:Palette}} 16 living themes</h3><p>GPU shaders and particle scenes, from a black hole to cherry blossom, plus your own photo.</p></div>
+    <div class="hb-feature"><h3>{{icon:SlidersHorizontal}} Tune every detail</h3><p>Each theme’s colours, speed, density and effects, plus fonts, glass, blur and corner roundness.</p></div>
+    <div class="hb-feature"><h3>{{icon:LayoutGrid}} 20 widgets</h3><p>Weather, to-dos, notes, focus timer, world clocks, calendar, currency, markets, moon phase and more.</p></div>
+    <div class="hb-feature"><h3>{{icon:Move}} Drag, drop, resize</h3><p>Arrange widgets however you like, in three sizes, with as many copies of each as you want.</p></div>
+    <div class="hb-feature"><h3>{{icon:Gauge}} Smooth on any device</h3><p>Sharp on high-res screens, adapts quality to your device, pauses when hidden and respects reduced motion.</p></div>
+    <div class="hb-feature"><h3>{{icon:ShieldCheck}} Private by design</h3><p>No account and no tracking. Your setup is stored only in your browser, with backups you control.</p></div>
+  </div>
+  <p class="hb-legal">Guides for Chrome, Edge, Firefox, Safari, Brave, Opera, Vivaldi, Arc and phones are built in. See the <a href="/privacy/#homebase">Homebase privacy notes</a>.</p>
+</section>
+
 <div class="section-head">
   <h2>Still to come</h2>
-  <p>Six more projects, in the works.</p>
+  <p>Four more projects, in the works.</p>
 </div>
 
 <div class="upcoming">
-  <section class="slot" id="project-02" aria-label="Project 02, coming soon">
-    <p class="project-num">PROJECT 02</p><h3>Coming soon</h3><p>This project hasn't been revealed yet.</p>
-    <span class="lock">{{icon:Lock}} In the works</span><span class="ghost" aria-hidden="true">02</span>
-  </section>
-  <section class="slot" id="project-03" aria-label="Project 03, coming soon">
-    <p class="project-num">PROJECT 03</p><h3>Coming soon</h3><p>This project hasn't been revealed yet.</p>
-    <span class="lock">{{icon:Lock}} In the works</span><span class="ghost" aria-hidden="true">03</span>
-  </section>
   <section class="slot" id="project-04" aria-label="Project 04, coming soon">
     <p class="project-num">PROJECT 04</p><h3>Coming soon</h3><p>This project hasn't been revealed yet.</p>
     <span class="lock">{{icon:Lock}} In the works</span><span class="ghost" aria-hidden="true">04</span>
