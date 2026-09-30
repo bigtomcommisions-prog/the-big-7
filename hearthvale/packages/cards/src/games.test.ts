@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Blackjack, Poker, ThreeCard, createGame, type Action, type Game, type GameId, type Seat } from './index.ts';
+import { Blackjack, Poker, createGame, type Action, type Game, type GameId, type Seat } from './index.ts';
 
 const seats = (...chips: number[]): Seat[] => chips.map((c, i) => ({ id: `p${i}`, name: `P${i}`, chips: c }));
 const sum = (ss: Seat[]) => ss.reduce((s, x) => s + x.chips, 0);
@@ -16,7 +16,7 @@ function randomAction(g: Game, id: string): Action {
   if (o.raise) picks.push({ type: 'raise', to: o.raise.min + rnd(o.raise.max - o.raise.min + 1) });
   if (o.bet) picks.push({ type: 'bet', amount: o.bet.min + rnd(o.bet.max - o.bet.min + 1) });
   for (const t of ['hit', 'stand', 'double', 'split', 'play'] as const) if (o[t]) picks.push({ type: t });
-  if (o.draw) picks.push({ type: 'draw', discard: [0, 1, 2, 3, 4].filter(() => Math.random() < 0.3).slice(0, 3) });
+  if (o.draw) picks.push({ type: 'draw', discard: g.view(id).mine[0]!.cards.map((_, i) => i).filter(() => Math.random() < 0.3).slice(0, 3) });
   assert.ok(picks.length, `no options for ${id} in ${g.view(id).phase}`);
   return picks[rnd(picks.length)]!;
 }
@@ -108,14 +108,19 @@ test('blackjack: dealer card stays face down until the end', () => {
   assert.equal(ss[0]!.chips + g.house, 1000);
 });
 
-test('three card poker: dealer cards hidden until settled', () => {
-  const g = new ThreeCard();
-  const ss = seats(1000);
-  g.start(ss);
-  assert.match(g.act('p0', { type: 'bet', amount: 600 }) ?? '', /between/);
-  g.act('p0', { type: 'bet', amount: 50 });
-  assert.equal(g.view('p0').dealer!.cards.join(), '??,??,??');
-  g.act('p0', { type: 'play' });
+test('three card poker: bet, swap any cards, bet, three-card ranking', () => {
+  const g = new Poker('threecard');
+  const ss = seats(500, 500);
+  // P0 gets A-2-3 (a straight after swapping nothing), P1 gets a flush and swaps it for three kings.
+  g.start(ss, 'Ac 2d 3h 4s 9s Js Kd Kh Kc'.split(' '));
+  assert.equal(g.view('p0').players[1]!.cards.join(), '??,??,??');
+  assert.equal(g.view('p0').mine[0]!.note, 'Straight');
+  g.act('p1', { type: 'check' });
+  g.act('p0', { type: 'check' });
+  assert.equal(g.act('p0', { type: 'draw', discard: [] }), null);
+  assert.equal(g.act('p1', { type: 'draw', discard: [0, 1, 2] }), null, 'all three may be swapped');
+  g.act('p1', { type: 'check' });
+  g.act('p0', { type: 'check' });
   assert.equal(g.inHand, false);
-  assert.equal(ss[0]!.chips + g.house, 1000);
+  assert.deepEqual(ss.map((s) => s.chips), [490, 510], 'three kings beat the straight');
 });

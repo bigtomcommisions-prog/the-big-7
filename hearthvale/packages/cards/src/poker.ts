@@ -1,7 +1,7 @@
-import { best, handName, newDeck, shuffle, type Card } from './cards.ts';
+import { best, handName, handName3, newDeck, score3, shuffle, type Card } from './cards.ts';
 import type { Action, Game, GameView, Options, Seat } from './types.ts';
 
-type Variant = 'holdem' | 'draw' | 'nine';
+type Variant = 'holdem' | 'draw' | 'nine' | 'threecard';
 
 interface P {
   seat: Seat;
@@ -17,6 +17,8 @@ interface P {
 const CFG = {
   holdem: { max: 9, hole: 2, ante: 0, sb: 10, bb: 20, streets: ['Pre-flop', 'Flop', 'Turn', 'River'] },
   draw: { max: 6, hole: 5, ante: 10, sb: 0, bb: 20, streets: ['First bet', 'Draw', 'Second bet'] },
+  // Three-card hand ranks: straights beat flushes. Swap any of your three cards.
+  threecard: { max: 6, hole: 3, ante: 10, sb: 0, bb: 20, streets: ['First bet', 'Draw', 'Second bet'] },
   // Placeholder rules until confirmed: five cards, bet, four more, bet, best five of nine.
   nine: { max: 5, hole: 5, ante: 10, sb: 0, bb: 20, streets: ['First bet', 'Second bet'] },
 };
@@ -91,7 +93,7 @@ export class Poker implements Game {
   }
 
   private get drawing() {
-    return this.id === 'draw' && this.street === 1 && !this.done;
+    return this.cfg.streets[this.street] === 'Draw' && !this.done;
   }
 
   private nextActor(from: number): number {
@@ -181,7 +183,7 @@ export class Poker implements Game {
     const idx = [...new Set(discard)];
     if (idx.some((x) => !Number.isInteger(x) || x < 0 || x >= p.cards.length)) return 'Invalid cards.';
     const kept = p.cards.filter((_, k) => !idx.includes(k));
-    const limit = kept.length === 1 && kept[0]![0] === 'A' ? 4 : 3;
+    const limit = this.id === 'threecard' ? 3 : kept.length === 1 && kept[0]![0] === 'A' ? 4 : 3;
     if (idx.length > limit) return 'You can discard up to 3 cards, or 4 if you keep an Ace.';
     this.muck.push(...p.cards.filter((_, k) => idx.includes(k)));
     p.cards = [...kept, ...this.take(idx.length)];
@@ -215,7 +217,7 @@ export class Poker implements Game {
   private showdown() {
     this.shown = true;
     const live = this.ps.filter((p) => !p.folded);
-    const score = new Map(live.map((p) => [p, best([...p.cards, ...this.board])]));
+    const score = new Map(live.map((p) => [p, this.rank([...p.cards, ...this.board])]));
     const won = new Map<P, number>();
     const levels = [...new Set(this.ps.map((p) => p.total))].filter((x) => x > 0).sort((a, b) => a - b);
     let prev = 0;
@@ -231,8 +233,16 @@ export class Poker implements Game {
       winners.forEach((w, k) => won.set(w, (won.get(w) ?? 0) + share + (k === 0 ? amount - share * winners.length : 0)));
     }
     for (const [p, amt] of won) p.seat.chips += amt;
-    this.results = [...won].map(([p, amt]) => `${p.seat.name} wins ${amt} with ${handName(score.get(p)!).toLowerCase()}`);
+    this.results = [...won].map(([p, amt]) => `${p.seat.name} wins ${amt} with ${this.name(score.get(p)!).toLowerCase()}`);
     this.end();
+  }
+
+  private rank(cards: Card[]) {
+    return this.id === 'threecard' ? score3(cards) : best(cards);
+  }
+
+  private name(score: number) {
+    return this.id === 'threecard' ? handName3(score) : handName(score);
   }
 
   private fromButton(p: P) {
@@ -277,7 +287,7 @@ export class Poker implements Game {
         turn: i === this.toAct || (this.drawing && !p.folded && p.drew === null),
         button: i === this.btn,
       })),
-      mine: me ? [{ label: me.folded ? 'Folded' : 'Your hand', cards: me.cards, note: visible.length >= 5 ? handName(best(visible)) : undefined }] : [],
+      mine: me ? [{ label: me.folded ? 'Folded' : 'Your hand', cards: me.cards, note: visible.length >= this.cfg.hole + (this.id === 'holdem' ? 3 : 0) ? this.name(this.rank(visible)) : undefined }] : [],
       options,
       results: this.results,
     };

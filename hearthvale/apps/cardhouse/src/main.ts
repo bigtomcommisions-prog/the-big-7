@@ -17,7 +17,7 @@ interface TableState {
 
 const GAMES: Record<GameId, { name: string; players: string; blurb: string }> = {
   blackjack: { name: 'Blackjack', players: '1–5', blurb: 'Beat the dealer to 21. Blackjack pays 3:2.' },
-  threecard: { name: 'Three Card Poker', players: '1–6', blurb: 'Ante, see three cards, then play or fold against the dealer.' },
+  threecard: { name: 'Three Card Poker', players: '2–6', blurb: 'Bet, swap any of your three cards, bet again. Straights beat flushes.' },
   holdem: { name: 'Texas Hold’em', players: '2–9', blurb: 'No-limit. Two cards each, five on the board.' },
   draw: { name: 'Five Card Draw', players: '2–6', blurb: 'Bet, swap up to three cards, bet again.' },
   nine: { name: 'Nine-card poker', players: '2–5', blurb: 'Five cards, bet, four more, bet. Best five of nine wins.' },
@@ -453,7 +453,7 @@ function renderActions(s: TableState, force = false) {
     out.push(h('div', { class: 'btns' }, btn('Fold', () => act({ type: 'fold' }), 'danger'), btn(`Play ${fmt(o.play)}`, () => act({ type: 'play' }), 'primary')));
   } else if (o.draw) {
     const n = selected.size;
-    out.push(h('p', { class: 'hint' }, 'Tap cards to discard: up to 3, or 4 if you keep an Ace.'));
+    out.push(h('p', { class: 'hint' }, s.game === 'threecard' ? 'Tap the cards you want to swap.' : 'Tap cards to discard: up to 3, or 4 if you keep an Ace.'));
     out.push(btn(n ? `Discard ${n} and draw` : 'Stand pat', () => act({ type: 'draw', discard: [...selected] }), 'primary wide'));
   }
   if (s.canTopUp && low && !o.bet) out.push(btn('Top up to 1,000 chips', () => send({ t: 'topup' }), 'wide'));

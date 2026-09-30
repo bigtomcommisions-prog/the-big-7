@@ -9,7 +9,7 @@ An online card room built for phones. Your hand fills most of the screen. Swipe 
 | Game | Players | Opponent | Version 1 rules |
 |---|---|---|---|
 | **Blackjack** | 1–5 at one table | Dealer | 6-deck shoe; dealer stands on soft 17; blackjack pays 3:2; double down on any two cards; split once; no insurance. |
-| **Three Card Poker** | 1–6 | Dealer | Ante then Play (or fold). The dealer qualifies with Queen-high. Hand ranks differ from normal poker: straight flush > three of a kind > straight > flush > pair > high card. Pair Plus side bet comes later. |
+| **Three Card Poker** | 2–6 | Each other | Same format as Five Card Draw with three cards: antes, a betting round, swap any cards, a second betting round, showdown. Hand ranks differ from normal poker: straight flush > three of a kind > straight > flush > pair > high card. |
 | **Five Card Draw** | 2–6 | Each other | Antes; a betting round; discard and draw up to 3 cards (4 if keeping an Ace); a second betting round; showdown. |
 | **Nine-card poker** | 2–6 | Each other | **Rules to confirm (see §8).** Placeholder: each player gets 9 cards and makes their best 5-card hand, with two betting rounds. |
 | **Texas Hold'em** | 2–9 | Each other | No-limit; small and big blinds; pre-flop, flop, turn and river betting; side pots for all-ins; best 5 of 7 cards. |
@@ -40,7 +40,7 @@ An online card room built for phones. Your hand fills most of the screen. Swipe 
 │ Board: 9♣ 9♦ K♠ 2♥   │  ← community cards (Hold'em)
 │ Bob  ● 800   bet 40  │  ← other players: stack, bet, cards
 │ Ana  ● 1,020 folded  │     (face-down until a showdown)
-│ Dealer: 7♦ ▢         │  ← the dealer's cards (Blackjack, Three Card Poker)
+│ Dealer: 7♦ ▢         │  ← the dealer's cards (Blackjack)
 └──────────────────────┘
 ```
 

@@ -413,7 +413,7 @@ Cardhouse (`/cardhouse/`, project 04 of The Big 7) is an online card room built 
 
 | Part | Where |
 |---|---|
-| Rules engine (pure TypeScript, no I/O) | `packages/cards/`: `cards.ts` (deck, `crypto.randomInt` shuffle, 5-card and 3-card ranking), `poker.ts` (no-limit betting, side and split pots, for Hold'em, Draw and nine-card), `house.ts` (Blackjack and Three Card Poker against a dealer) |
+| Rules engine (pure TypeScript, no I/O) | `packages/cards/`: `cards.ts` (deck, `crypto.randomInt` shuffle, 5-card and 3-card ranking), `poker.ts` (no-limit betting, side and split pots, for Hold'em, Five Card Draw, Three Card Poker and nine-card), `house.ts` (Blackjack against the dealer) |
 | Game server | `apps/server/src/cards/cardServer.ts`: the `/cards` WebSocket on the existing backend (`wss://api.bigtomdev.fyi/cards`) |
 | App (Vite + TypeScript, no framework) | `apps/cardhouse/`, built into `apps/client/dist/cardhouse/` |
 
@@ -425,6 +425,7 @@ Cardhouse (`/cardhouse/`, project 04 of The Big 7) is an online card room built 
 - **Chips:** 1,000 to start; anyone below 1,000 can top up to 1,000 between hands.
 - **Limits:** tables live in memory (a server restart ends them), at most 500 tables, 10 new tables per IP per 10 minutes, and 20 messages per 10 seconds per connection. Every message is checked with zod.
 - **Tests:** `npm test -w @bigtomdev/cards` (hand ranking, side pots, split pots, draw rules and random-play simulations, including 10,000 Blackjack hands, that check no chip is ever created or lost) and `src/cards/cardServer.test.ts` in the server (two players over real WebSockets, a mid-hand rejoin, and hidden cards).
+- **Three Card Poker** plays like Five Card Draw with three cards: antes, a betting round, swap any of your cards, a second betting round, then a showdown using three-card ranks (straights beat flushes, A-2-3 is the lowest straight). There's no dealer.
 - **Nine-card poker rules are a placeholder** until confirmed: five cards, a betting round, four more cards, a second betting round, best five of nine. It's capped at 5 players so the deck never runs out.
 - **Known simplification:** a short all-in raise reopens betting for everyone, where strict rules only let players who have already acted call.
 

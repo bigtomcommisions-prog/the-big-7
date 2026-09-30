@@ -1,4 +1,4 @@
-import { category3, handName3, newDeck, score3, shuffle, type Card } from './cards.ts';
+import { newDeck, shuffle, type Card } from './cards.ts';
 import type { Action, Game, GameView, Options, PlayerView, Seat } from './types.ts';
 
 const MIN_BET = 10;
@@ -6,7 +6,7 @@ const MAX_BET = 500;
 
 /** The shared betting phase for games against the dealer. `house` is the dealer's net result. */
 abstract class HouseGame<P extends { seat: Seat; bet: number | null }> implements Game {
-  abstract readonly id: 'blackjack' | 'threecard';
+  abstract readonly id: 'blackjack';
   abstract readonly maxPlayers: number;
   readonly minPlayers = 1;
   abstract readonly minChips: number;
@@ -275,113 +275,6 @@ export class Blackjack extends HouseGame<BP> {
         note: describe(h),
         active: this.phase === 'play' && this.ps[this.turn.p] === me && this.turn.h === k,
       })),
-      options,
-      results: this.results,
-    };
-  }
-}
-
-// ---------------------------------------------------------------- Three Card Poker
-
-interface TP {
-  seat: Seat;
-  bet: number | null; // the ante
-  cards: Card[];
-  play: boolean | null;
-  result?: string;
-}
-
-/** Ante then Play or fold. Dealer qualifies with Queen-high. Ante bonus: straight 1, trips 4, straight flush 5. */
-export class ThreeCard extends HouseGame<TP> {
-  readonly id = 'threecard';
-  readonly maxPlayers = 6;
-  readonly minChips = MIN_BET * 2;
-
-  protected player(seat: Seat): TP {
-    return { seat, bet: null, cards: [], play: null };
-  }
-
-  protected maxBet(p: TP) {
-    return Math.min(MAX_BET, Math.floor(p.seat.chips / 2)); // keep enough back for the Play bet
-  }
-
-  protected deal() {
-    const deck = shuffle(newDeck());
-    for (const p of this.ps) p.cards = deck.splice(0, 3);
-    this.dealer = deck.splice(0, 3);
-  }
-
-  act(seatId: string, a: Action): string | null {
-    const p = this.find(seatId);
-    if (!this.inHand || !p) return 'You are not in this hand.';
-    if (this.phase === 'bet') return this.placeBet(p, a);
-    if (p.play !== null) return 'You have already decided.';
-    if (a.type === 'play') {
-      p.seat.chips -= p.bet!;
-      this.house += p.bet!;
-      p.play = true;
-    } else if (a.type === 'fold') p.play = false;
-    else return 'Play or fold.';
-    if (this.ps.every((q) => q.play !== null)) this.settle();
-    return null;
-  }
-
-  private settle() {
-    const ds = score3(this.dealer);
-    const qualifies = ds >= score3(['Qs', '3h', '2d']);
-    this.results = [];
-    for (const p of this.ps) {
-      const ante = p.bet!;
-      if (!p.play) {
-        p.result = `Fold −${ante}`;
-      } else {
-        const ps = score3(p.cards);
-        const bonus = [0, 0, 0, 1, 4, 5][category3(ps)]! * ante;
-        const main = !qualifies ? ante * 3 : ps > ds ? ante * 4 : ps === ds ? ante * 2 : 0;
-        this.pay(p, main + bonus);
-        const net = main + bonus - ante * 2;
-        p.result = `${net > 0 ? `Win +${net}` : net === 0 ? 'Push' : `Lose −${-net}`}${!qualifies ? ' (dealer doesn’t qualify)' : ''}${bonus ? ` incl. bonus ${bonus}` : ''}`;
-      }
-      this.results.push(`${p.seat.name}: ${p.result}`);
-    }
-    this.end();
-  }
-
-  pending(): string[] {
-    if (this.phase === 'play') return this.ps.filter((p) => p.play === null).map((p) => p.seat.id);
-    return this.betting();
-  }
-
-  auto(seatId: string) {
-    const p = this.find(seatId);
-    if (!p) return;
-    if (this.phase === 'bet') {
-      p.bet = 0;
-      return this.afterBet();
-    }
-    this.act(seatId, { type: 'fold' });
-  }
-
-  view(seatId: string): GameView {
-    const me = this.find(seatId);
-    const open = this.phase === 'done';
-    const options = this.betOptions(me);
-    if (me && this.phase === 'play' && me.play === null) Object.assign(options, { fold: true, play: me.bet! });
-    return {
-      phase: this.phaseName('Play or fold'),
-      pot: this.ps.reduce((s, p) => s + (p.bet ?? 0) * (p.play ? 2 : 1), 0),
-      board: [],
-      dealer: this.dealer.length ? { cards: open ? this.dealer : ['??', '??', '??'], note: open ? handName3(score3(this.dealer)) : undefined } : null,
-      players: this.ps.map((p) => ({
-        id: p.seat.id,
-        name: p.seat.name,
-        chips: p.seat.chips,
-        bet: (p.bet ?? 0) * (p.play ? 2 : 1),
-        status: p.result ?? (p.bet === null ? 'Betting…' : p.play === null ? 'Deciding…' : p.play ? 'Playing' : 'Folded'),
-        cards: p === me || open ? p.cards : p.cards.map(() => '??'),
-        turn: this.pending().includes(p.seat.id),
-      })),
-      mine: me?.cards.length ? [{ label: `Ante ${me.bet}${me.play ? ` · Play ${me.bet}` : ''}`, cards: me.cards, note: handName3(score3(me.cards)) }] : [],
       options,
       results: this.results,
     };
