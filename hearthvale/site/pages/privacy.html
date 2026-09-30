@@ -2,7 +2,7 @@
   <h1>Privacy Policy</h1>
   <p class="updated">Last updated: {{updated}}</p>
 
-  <p>This policy explains what personal data is collected when you use the Big Tom Dev website (<strong>bigtomdev.fyi</strong>), <strong>Hearthvale</strong> (<strong>bigtomdev.fyi/hearthvale</strong>) , <strong>OmniPrice</strong> (<strong>bigtomdev.fyi/omniprice</strong>) and <strong>Homebase</strong> (<strong>bigtomdev.fyi/homebase</strong>), why, and what your rights are. It is written to meet the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+  <p>This policy explains what personal data is collected when you use the Big Tom Dev website (<strong>bigtomdev.fyi</strong>), <strong>Hearthvale</strong> (<strong>bigtomdev.fyi/hearthvale</strong>) , <strong>OmniPrice</strong> (<strong>bigtomdev.fyi/omniprice</strong>), <strong>Homebase</strong> (<strong>bigtomdev.fyi/homebase</strong>) and <strong>Cardhouse</strong> (<strong>bigtomdev.fyi/cardhouse</strong>), why, and what your rights are. It is written to meet the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
 
   <nav class="toc" aria-label="Contents">
     <strong>Contents</strong>
@@ -12,6 +12,7 @@
       <li><a href="#hearthvale">Hearthvale</a></li>
       <li><a href="#omniprice">OmniPrice</a></li>
       <li><a href="#homebase">Homebase</a></li>
+    <li><a href="#cardhouse">Cardhouse</a></li>
       <li><a href="#others">People who don't use Hearthvale</a></li>
       <li><a href="#bases">Why we're allowed to use it</a></li>
       <li><a href="#sharing">Who we share it with</a></li>
@@ -53,7 +54,7 @@
   <h3>3.3 Messages</h3>
   <ul>
     <li><strong>Messages you send from the world</strong> are posted to the real Discord channel under your name and avatar, using a Discord webhook. Once posted, they are on Discord and governed by <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Discord's Privacy Policy</a>. We store only <strong>metadata</strong> for 30 days: the message ID, server, channel and time. We use it to attribute messages correctly and to investigate abuse. We never store the text.</li>
-    <li><strong>Messages from the Discord channels you can view</strong> are shown to you as the notice board inside a house and as speech bubbles. They are fetched from Discord when needed, held in memory for up to 30 seconds (history) or 24 hours (see section 6), and <strong>not stored</strong>.</li>
+    <li><strong>Messages from the Discord channels you can view</strong> are shown to you as the notice board inside a house and as speech bubbles. They are fetched from Discord when needed, held in memory for up to 30 seconds (history) or 24 hours (see section 7), and <strong>not stored</strong>.</li>
   </ul>
 
   <h3>3.4 Voice chat</h3>
@@ -96,7 +97,17 @@
     <li><strong>Backups</strong> you download are files on your device. We never see them.</li>
   </ul>
 
-  <h2 id="others">6. People who don't use Hearthvale</h2>
+  <h2 id="cardhouse">6. Cardhouse</h2>
+  <p>Cardhouse is a card room that needs <strong>no account</strong>. It uses the least data it can to run a table:</p>
+  <ul>
+    <li><strong>Your nickname</strong>, chip count, cards and actions are held <strong>in our server's memory only</strong> while your table is running, and shown to the other players at that table. Nothing is written to a database. A seat you leave, or lose connection from for more than two minutes, is deleted between hands, and a whole table is deleted once everyone has gone. A server restart ends all tables.</li>
+    <li><strong>A random seat token</strong> is kept in your browser's session storage so you can rejoin your seat after a refresh or a dropped connection. It's deleted when you close the tab or leave the table.</li>
+    <li><strong>Your IP address</strong> is used briefly in memory to limit how many tables one connection can create, which protects the service from abuse. It isn't stored.</li>
+    <li>There's <strong>no chat</strong>, so there's nothing you write to other players apart from your nickname. Please don't use your real name or anything personal as your nickname.</li>
+  </ul>
+  <p>Cardhouse runs on the same server and hosting as Hearthvale (sections 9 and 10), and the same server logs apply.</p>
+
+  <h2 id="others">7. People who don't use Hearthvale</h2>
   <p>When a Discord server adds the Hearthvale bot, some data about that server's members is shown in its world, <strong>only to other members of the same server who can see the relevant channel</strong>:</p>
   <ul>
     <li>If you recently posted in a channel, you may appear as a translucent <strong>“away” character</strong> by that channel's house, with your Discord display name, avatar and recent message. This is kept in memory for up to 24 hours and not stored.</li>
@@ -104,19 +115,21 @@
   </ul>
   <p>This is information those members could already see in Discord. Server administrators choose to add the bot and should tell their members. If you'd like to be excluded, contact us or ask your server's administrators.</p>
 
-  <h2 id="bases">7. Why we're allowed to use it (lawful bases)</h2>
+  <h2 id="bases">8. Why we're allowed to use it (lawful bases)</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>Purpose</th><th>Lawful basis (UK GDPR Art. 6)</th></tr></thead>
     <tbody>
       <tr><td>Logging you in, saving your character and settings, running the world, posting your messages, voice chat you choose to join</td><td>Contract: providing the service you asked for</td></tr>
       <tr><td>Permission checks, rate limiting, security logs, message metadata for abuse investigation</td><td>Legitimate interests: keeping the service safe and within Discord's rules</td></tr>
-      <tr><td>Showing server members' activity and voice presence to other members of that server (section 6)</td><td>Legitimate interests: making the world reflect the server, limited to what members can already see in Discord</td></tr>
+      <tr><td>Showing server members' activity and voice presence to other members of that server (section 7)</td><td>Legitimate interests: making the world reflect the server, limited to what members can already see in Discord</td></tr>
+      <tr><td>Running a Cardhouse table: your nickname, cards, chips and seat token</td><td>Contract: providing the game you asked to join</td></tr>
+      <tr><td>Cardhouse abuse limits (IP address, held briefly in memory)</td><td>Legitimate interests: keeping the service available</td></tr>
       <tr><td>Website and OmniPrice request logs</td><td>Legitimate interests: delivering and securing the website</td></tr>
       <tr><td>Microphone access</td><td>Your choice, given through your browser's permission prompt, and withdrawable at any time</td></tr>
     </tbody>
   </table></div>
 
-  <h2 id="sharing">8. Who we share it with</h2>
+  <h2 id="sharing">9. Who we share it with</h2>
   <p>We don't sell or rent personal data. We use these service providers, who process data on our behalf or as needed to run the service:</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Provider</th><th>What for</th><th>Data involved</th></tr></thead>
@@ -131,10 +144,10 @@
   </table></div>
   <p>We may also disclose data if the law requires it, or to protect people from harm.</p>
 
-  <h2 id="transfers">9. International transfers</h2>
+  <h2 id="transfers">10. International transfers</h2>
   <p>The providers above are based in the United States. Where personal data leaves the UK, it is protected by the UK Extension to the EU–US Data Privacy Framework, or by the UK International Data Transfer Addendum and standard contractual clauses, as provided in each provider's data protection terms.</p>
 
-  <h2 id="retention">10. How long we keep it</h2>
+  <h2 id="retention">11. How long we keep it</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>Data</th><th>Kept for</th></tr></thead>
     <tbody>
@@ -144,12 +157,13 @@
       <tr><td>Server logs</td><td>Up to 30 days</td></tr>
       <tr><td>Server list, positions, permission checks, message history and activity shown in the world</td><td>In memory only, for seconds to 24 hours. Never stored.</td></tr>
       <tr><td>Voice audio</td><td>Not kept. Real-time only.</td></tr>
+      <tr><td>Cardhouse nickname, seat, cards and chips</td><td>In memory only, while your table runs. Never stored.</td></tr>
       <tr><td>Homebase</td><td>Kept only in your browser until you delete it. We hold nothing.</td></tr>
       <tr><td>OmniPrice</td><td>Nothing is stored about you. Hosting request logs are kept by Vercel for a short period.</td></tr>
     </tbody>
   </table></div>
 
-  <h2 id="rights">11. Your rights</h2>
+  <h2 id="rights">12. Your rights</h2>
   <p>Under UK GDPR you can ask to <strong>access</strong>, <strong>correct</strong>, <strong>delete</strong> or <strong>receive a copy</strong> of your data, and to <strong>restrict</strong> or <strong>object to</strong> how we use it. You can do the main ones yourself in Hearthvale, under <strong>Settings → Account</strong>:</p>
   <ul>
     <li><strong>Download my data</strong> gives you a copy of everything Hearthvale stores about you, as a JSON file.</li>
@@ -158,12 +172,12 @@
   <p>You can also remove Hearthvale's access at any time in Discord under <strong>User Settings → Authorised Apps</strong>. For anything else, email <a href="mailto:{{contact}}">{{contact}}</a>. We'll reply within one month.</p>
   <p>If you're unhappy with how we handle your data, you can complain to the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener noreferrer">ico.org.uk</a>. We'd appreciate the chance to sort it out first.</p>
 
-  <h2 id="children">12. Children</h2>
-  <p>Hearthvale is for people aged <strong>13 or over</strong>, the minimum age to use Discord, or older where local law requires it. We don't knowingly collect data from younger children. If you believe we have, contact us and we'll delete it.</p>
+  <h2 id="children">13. Children</h2>
+  <p>Hearthvale and Cardhouse are for people aged <strong>13 or over</strong>, the minimum age to use Discord, or older where local law requires it. We don't knowingly collect data from younger children. If you believe we have, contact us and we'll delete it.</p>
 
-  <h2 id="security">13. Security</h2>
+  <h2 id="security">14. Security</h2>
   <p>All connections use HTTPS. Discord tokens are encrypted at rest. Session cookies are stored only as one-way hashes. Every action is re-checked against Discord's own permissions on the server. No system is perfectly secure, but we take reasonable care to protect your data, and we'll tell you and the ICO if a breach puts you at risk.</p>
 
-  <h2 id="changes">14. Changes and contact</h2>
+  <h2 id="changes">15. Changes and contact</h2>
   <p>If this policy changes, we'll update the date at the top. For significant changes, we'll also say so in Hearthvale. Questions? Email <a href="mailto:{{contact}}">{{contact}}</a>.</p>
 </article>

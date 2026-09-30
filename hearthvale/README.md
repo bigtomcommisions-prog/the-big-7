@@ -317,7 +317,7 @@ Browser ──▶ bigtomdev.fyi/hearthvale ──▶ Vercel (static frontend)
 | Voice | LiveKit Cloud | Free tier |
 | DNS | Cloudflare: `@` A record `76.76.21.21` (Vercel, DNS only); `api` CNAME `<tunnel-id>.cfargotunnel.com` (proxied) | Domain only |
 
-- **Deploy the frontend:** `npx vercel --prod` from the repo root. `.vercelignore` keeps `.env*`, `data` and `tools` out of the upload. Vercel redirects `/` to `/hearthvale/`.
+- **Deploy the frontend:** `npx vercel --prod` from the repo root. Vercel runs `npm run build:vercel` (`scripts/build-vercel.mjs`), which builds Hearthvale, OmniPrice, Homebase and the site pages into `apps/client/dist/`. `.vercelignore` keeps `.env*`, `data` and `tools` out of the upload.
 - **Run the backend:** `npm run start:prod`. It builds the server and starts it with `.env.production`.
 - **Discord Developer Portal:** OAuth2 → Redirects must include `https://api.bigtomdev.fyi/auth/callback`.
 - The site only works while the backend machine is on. For a free always-on machine, an **Oracle Cloud Always Free** VM works well. Free tiers that sleep when idle (Render, Koyeb) disconnect the bot and lose the database, so avoid them.
@@ -341,12 +341,12 @@ The same Vercel project also serves the Big Tom Dev site around Hearthvale:
 | Path | Page |
 |---|---|
 | `/` | Home: collections of bigger projects |
-| `/the-big-7/` | The Big 7: Hearthvale showcase plus six "coming soon" slots |
-| `/privacy/`, `/terms/`, `/cookies/` | Legal pages covering the site and Hearthvale |
-| `/hearthvale/` | The Hearthvale app |
+| `/the-big-7/` | The Big 7: showcases for Hearthvale, OmniPrice, Homebase and Cardhouse, plus three "coming soon" slots |
+| `/privacy/`, `/terms/`, `/cookies/` | Legal pages covering the site and every app |
+| `/hearthvale/`, `/omniprice/`, `/homebase/`, `/cardhouse/` | The apps |
 
 - The pages are HTML fragments in `site/pages/`, and the styles, logo and images are in `site/assets/`.
-- `node scripts/build-site.mjs` (also `npm run build:site`) wraps each page in the shared banner (logo, "Big Tom Dev", tabs) and footer. It writes the result into `apps/client/dist/` next to the app, and Vercel runs it after the client build.
+- `node scripts/build-site.mjs` (also `npm run build:site`) wraps each page in the shared banner and footer. The banner has the logo, "Big Tom Dev" and two tabs, Home and The Big 7. Projects are reached from those pages, not from the banner. It writes the result into `apps/client/dist/` next to the app, and Vercel runs it after the client build.
 - The contact email and the "last updated" date for the legal pages are set at the top of `scripts/build-site.mjs`.
 - To fill one of the Big 7 slots, replace its `<section class="slot">` in `site/pages/big7.html`.
 
@@ -396,6 +396,7 @@ Homebase (`/homebase/`, project 03 of The Big 7) is a private browser start page
 | Settings & guide | `src/ui/panel.ts` (themes, customise, look, widgets, general, data), `src/ui/guide.ts` (browser setup tutorials with browser detection) |
 
 - **Run it locally:** `npm run dev:homebase` → <http://localhost:5175/homebase/>. The currency and market widgets call the OmniPrice API through the same dev middleware.
+- **First-visit defaults** (`defaultState()` in `src/store.ts`): the City Rain theme, Google search, no quick-links widget, website icons on, and the Big Tom Dev bar off (it can be turned on in Customise → Look). These only apply to new visitors or after a reset.
 - **Storage:** everything lives in the browser. Settings are in `localStorage` (`homebase.v1`), photos in IndexedDB (`homebase`), and weather is cached for 20 minutes. Users can back up and restore via Customise → Data.
 - **Adding a theme:** add a `ThemeDef` to `THEMES`. `params` automatically become controls in the Customise tab. Use `glScene(canvas, fragmentShader, uniformsFn)` for shaders, or the `canvas2d` helper for particles.
 - **Adding a widget:** export a `WidgetDef` and list it in `src/widgets/index.ts`. Any `fields` automatically become its settings dialog.
@@ -406,10 +407,32 @@ Homebase (`/homebase/`, project 03 of The Big 7) is a private browser start page
 
   All of these are disclosed in the Privacy Policy.
 
+### Cardhouse
+
+Cardhouse (`/cardhouse/`, project 04 of The Big 7) is an online card room built for phones. Your hand fills the screen, you swipe sideways through your cards, and you swipe up (or tap the handle) for your chips, the board, the dealer and the other players. Games: Blackjack, Three Card Poker, Texas Hold'em, Five Card Draw and nine-card poker. **Play money only:** chips are free and can't be bought or cashed out. The original plan is in [docs/cardhouse-plan.md](docs/cardhouse-plan.md).
+
+| Part | Where |
+|---|---|
+| Rules engine (pure TypeScript, no I/O) | `packages/cards/`: `cards.ts` (deck, `crypto.randomInt` shuffle, 5-card and 3-card ranking), `poker.ts` (no-limit betting, side and split pots, for Hold'em, Draw and nine-card), `house.ts` (Blackjack and Three Card Poker against a dealer) |
+| Game server | `apps/server/src/cards/cardServer.ts`: the `/cards` WebSocket on the existing backend (`wss://api.bigtomdev.fyi/cards`) |
+| App (Vite + TypeScript, no framework) | `apps/cardhouse/`, built into `apps/client/dist/cardhouse/` |
+
+- **Run it locally:** start the backend (`npm run dev`), then `npm run dev:cardhouse` → <http://localhost:5176/cardhouse/>. Vite proxies `/cards` to the backend on port 3000. Open a second browser window to play against yourself.
+- **Deploying:** `npm run build:vercel` builds the app. The backend needs rebuilding and restarting on the server machine (`npm run build`, then `npm run start:prod`) to get the `/cards` endpoint. Nothing new to configure: it uses the existing tunnel and `APP_ORIGIN` for its Origin check.
+- **Server-authoritative:** the server shuffles, deals, checks every action and pays out. Each player gets a view built for them only, so other players' face-down cards, the dealer's hole card and the deck order never leave the server.
+- **Tables:** create one and share the 5-letter code or link (`?table=CODE`). No account: players pick a nickname. A random seat token in `sessionStorage` (`cardhouse:seat`) lets a player rejoin after a refresh or dropped connection. Seats offline for 2 minutes are dropped between hands.
+- **Turn timer:** 30 seconds. Timing out gives the safe move (check or fold, stand, stand pat, or sit out the betting round) and sits the player out until they tap "Deal me in".
+- **Chips:** 1,000 to start; anyone below 1,000 can top up to 1,000 between hands.
+- **Limits:** tables live in memory (a server restart ends them), at most 500 tables, 10 new tables per IP per 10 minutes, and 20 messages per 10 seconds per connection. Every message is checked with zod.
+- **Tests:** `npm test -w @bigtomdev/cards` (hand ranking, side pots, split pots, draw rules and random-play simulations, including 10,000 Blackjack hands, that check no chip is ever created or lost) and `src/cards/cardServer.test.ts` in the server (two players over real WebSockets, a mid-hand rejoin, and hidden cards).
+- **Nine-card poker rules are a placeholder** until confirmed: five cards, a betting round, four more cards, a second betting round, best five of nine. It's capped at 5 players so the deck never runs out.
+- **Known simplification:** a short all-in raise reopens betting for everyone, where strict rules only let players who have already acted call.
+
 ### Link previews
 
 Pasting the link into Discord, Slack, X or iMessage shows a card with the title, description and `apps/client/public/og-image.png` (1200×630). The tags are in `apps/client/index.html`. Image URLs must be absolute, so they're built from `VITE_SITE_URL` at build time.
 
+- Each app has its own preview image, for example `apps/cardhouse/public/og-cardhouse.png`.
 - To change the image, replace `og-image.png` (PNG or JPG; SVG isn't supported by Discord) and redeploy.
 - Discord caches embeds. To see changes on an already-posted link, add a throwaway query string, for example `https://bigtomdev.fyi/hearthvale/?v=2`.
 

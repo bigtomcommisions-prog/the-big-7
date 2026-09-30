@@ -15,6 +15,7 @@
     "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev -w @hearthvale/server\" \"npm run dev -w @hearthvale/client\"",
     "dev:omniprice": "npm run dev -w @bigtomdev/omniprice",
     "dev:homebase": "npm run dev -w @bigtomdev/homebase",
+    "dev:cardhouse": "npm run dev -w @bigtomdev/cardhouse",
     "build": "npm run build -w @hearthvale/client && npm run build -w @hearthvale/server",
     "build:site": "node scripts/build-site.mjs",
     "build:vercel": "node scripts/build-vercel.mjs",

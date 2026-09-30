@@ -1,0 +1,830 @@
+{
+  ".vscode/settings.json": {
+    "mtime": 1790517485.217867,
+    "seen": 1790756998.906666,
+    "ast_hash": "3e27f4a9a217c1ad174124a9251de523",
+    "semantic_hash": "3e27f4a9a217c1ad174124a9251de523"
+  },
+  "hearthvale/api/_omniprice/catalog.js": {
+    "mtime": 1790619009.0813837,
+    "seen": 1790756998.9066703,
+    "ast_hash": "52706389716dc42503a3aa24733a138c",
+    "semantic_hash": "52706389716dc42503a3aa24733a138c"
+  },
+  "hearthvale/api/_omniprice/handler.js": {
+    "mtime": 1790618854.0651858,
+    "seen": 1790756998.9066722,
+    "ast_hash": "7273e1cb8379a67d6904e0c6bc6daae8",
+    "semantic_hash": "7273e1cb8379a67d6904e0c6bc6daae8"
+  },
+  "hearthvale/api/_omniprice/sources.js": {
+    "mtime": 1790618793.077082,
+    "seen": 1790756998.9066734,
+    "ast_hash": "2d1abcd9d977404b94241a8313f18d7a",
+    "semantic_hash": "2d1abcd9d977404b94241a8313f18d7a"
+  },
+  "hearthvale/api/omniprice.js": {
+    "mtime": 1790616475.6343198,
+    "seen": 1790756998.9066741,
+    "ast_hash": "8eeb5225b0df79303b9623bf45514d5c",
+    "semantic_hash": "8eeb5225b0df79303b9623bf45514d5c"
+  },
+  "hearthvale/apps/client/package.json": {
+    "mtime": 1790578323.5852568,
+    "seen": 1790756998.9066753,
+    "ast_hash": "16d0a48016c2b78d7338114b3f67df54",
+    "semantic_hash": "16d0a48016c2b78d7338114b3f67df54"
+  },
+  "hearthvale/apps/client/src/api.ts": {
+    "mtime": 1790578248.6207867,
+    "seen": 1790756998.9066763,
+    "ast_hash": "16e16f05bb6142e94c0390be69efd0ba",
+    "semantic_hash": "16e16f05bb6142e94c0390be69efd0ba"
+  },
+  "hearthvale/apps/client/src/dev/sandbox.ts": {
+    "mtime": 1790539870.2058394,
+    "seen": 1790756998.9066772,
+    "ast_hash": "b0f9b4f5bd0e87f868606a8cf130794e",
+    "semantic_hash": "b0f9b4f5bd0e87f868606a8cf130794e"
+  },
+  "hearthvale/apps/client/src/dev/voiceTest.ts": {
+    "mtime": 1790523667.4234746,
+    "seen": 1790756998.906678,
+    "ast_hash": "85b03f57339bd4001c397e08c7eefdef",
+    "semantic_hash": "85b03f57339bd4001c397e08c7eefdef"
+  },
+  "hearthvale/apps/client/src/game/ambience.ts": {
+    "mtime": 1790520768.4294002,
+    "seen": 1790756998.9066787,
+    "ast_hash": "cbdd5f8dc5a95817714a5cbee5a0453b",
+    "semantic_hash": "cbdd5f8dc5a95817714a5cbee5a0453b"
+  },
+  "hearthvale/apps/client/src/game/assets/buildings.ts": {
+    "mtime": 1790539810.46081,
+    "seen": 1790756998.9066796,
+    "ast_hash": "674cadd78ca618ecd59e491f146e4777",
+    "semantic_hash": "674cadd78ca618ecd59e491f146e4777"
+  },
+  "hearthvale/apps/client/src/game/assets/character.ts": {
+    "mtime": 1790544233.9670796,
+    "seen": 1790756998.9066806,
+    "ast_hash": "c752266ed1f49b0b472ed4b7bd3f51a9",
+    "semantic_hash": "c752266ed1f49b0b472ed4b7bd3f51a9"
+  },
+  "hearthvale/apps/client/src/game/assets/props.ts": {
+    "mtime": 1790520462.3994896,
+    "seen": 1790756998.9066813,
+    "ast_hash": "df4ceadb3fa54accaf4ffa3d03961769",
+    "semantic_hash": "df4ceadb3fa54accaf4ffa3d03961769"
+  },
+  "hearthvale/apps/client/src/game/assets/text.ts": {
+    "mtime": 1790539810.4592829,
+    "seen": 1790756998.906682,
+    "ast_hash": "8f2eb6c631c28023a6bb43fad6586c71",
+    "semantic_hash": "8f2eb6c631c28023a6bb43fad6586c71"
+  },
+  "hearthvale/apps/client/src/game/avatars.ts": {
+    "mtime": 1790539810.4618368,
+    "seen": 1790756998.906683,
+    "ast_hash": "f757fb24a62018ee483c40aff284c8fb",
+    "semantic_hash": "f757fb24a62018ee483c40aff284c8fb"
+  },
+  "hearthvale/apps/client/src/game/camera.ts": {
+    "mtime": 1790521157.357842,
+    "seen": 1790756998.906684,
+    "ast_hash": "ba121c2e796fcf1458c02ac9d0371b92",
+    "semantic_hash": "ba121c2e796fcf1458c02ac9d0371b92"
+  },
+  "hearthvale/apps/client/src/game/collision.ts": {
+    "mtime": 1790520237.081237,
+    "seen": 1790756998.9066849,
+    "ast_hash": "793337dd91febd4cd7910c0538688f32",
+    "semantic_hash": "793337dd91febd4cd7910c0538688f32"
+  },
+  "hearthvale/apps/client/src/game/engine.ts": {
+    "mtime": 1790522951.9214225,
+    "seen": 1790756998.9066856,
+    "ast_hash": "0ff5c69ce40e7462ce464ca95ba46d66",
+    "semantic_hash": "0ff5c69ce40e7462ce464ca95ba46d66"
+  },
+  "hearthvale/apps/client/src/game/game.ts": {
+    "mtime": 1790544956.6810503,
+    "seen": 1790756998.9066868,
+    "ast_hash": "4ea69a27a5a103d2ca0f0f0a34d9524c",
+    "semantic_hash": "4ea69a27a5a103d2ca0f0f0a34d9524c"
+  },
+  "hearthvale/apps/client/src/game/input.ts": {
+    "mtime": 1790520617.9360597,
+    "seen": 1790756998.9066875,
+    "ast_hash": "9c3c986b3e5b88fdfc2b3b11bbf29be4",
+    "semantic_hash": "9c3c986b3e5b88fdfc2b3b11bbf29be4"
+  },
+  "hearthvale/apps/client/src/game/player.ts": {
+    "mtime": 1790520647.074228,
+    "seen": 1790756998.9066882,
+    "ast_hash": "d2027219c367570e95435602f9ac3d32",
+    "semantic_hash": "d2027219c367570e95435602f9ac3d32"
+  },
+  "hearthvale/apps/client/src/game/voxel.ts": {
+    "mtime": 1790520204.878736,
+    "seen": 1790756998.9066892,
+    "ast_hash": "688278655f1cc10cdf695e1ac5b70e1c",
+    "semantic_hash": "688278655f1cc10cdf695e1ac5b70e1c"
+  },
+  "hearthvale/apps/client/src/game/world.ts": {
+    "mtime": 1790539810.4618368,
+    "seen": 1790756998.9066906,
+    "ast_hash": "f0ae6bbfb6781989fe88700e38456769",
+    "semantic_hash": "f0ae6bbfb6781989fe88700e38456769"
+  },
+  "hearthvale/apps/client/src/main.ts": {
+    "mtime": 1790578333.5128553,
+    "seen": 1790756998.9066916,
+    "ast_hash": "9a315af7529f11a00f5f8323c12de04f",
+    "semantic_hash": "9a315af7529f11a00f5f8323c12de04f"
+  },
+  "hearthvale/apps/client/src/net/socket.ts": {
+    "mtime": 1790525454.7994092,
+    "seen": 1790756998.906692,
+    "ast_hash": "a18959d3057c55a8439000776dd1dc4f",
+    "semantic_hash": "a18959d3057c55a8439000776dd1dc4f"
+  },
+  "hearthvale/apps/client/src/ui/characterEditor.ts": {
+    "mtime": 1790544031.0745304,
+    "seen": 1790756998.9066932,
+    "ast_hash": "d40b833de3dbdeedb0daf91e3e8b40f6",
+    "semantic_hash": "d40b833de3dbdeedb0daf91e3e8b40f6"
+  },
+  "hearthvale/apps/client/src/ui/chatPanel.ts": {
+    "mtime": 1790539831.7670527,
+    "seen": 1790756998.906694,
+    "ast_hash": "0b7fe602e542bde34ae287ea6a350c22",
+    "semantic_hash": "0b7fe602e542bde34ae287ea6a350c22"
+  },
+  "hearthvale/apps/client/src/ui/dom.ts": {
+    "mtime": 1790539810.4633536,
+    "seen": 1790756998.906695,
+    "ast_hash": "2cd88a14628823cd39d7853800e01665",
+    "semantic_hash": "2cd88a14628823cd39d7853800e01665"
+  },
+  "hearthvale/apps/client/src/ui/format.ts": {
+    "mtime": 1790520184.0508401,
+    "seen": 1790756998.9066958,
+    "ast_hash": "54711e045c1cc59976cc936ff411ec15",
+    "semantic_hash": "54711e045c1cc59976cc936ff411ec15"
+  },
+  "hearthvale/apps/client/src/ui/hud.ts": {
+    "mtime": 1790544956.6795268,
+    "seen": 1790756998.9066968,
+    "ast_hash": "7df080ef2f918533da6a00639412ac9a",
+    "semantic_hash": "7df080ef2f918533da6a00639412ac9a"
+  },
+  "hearthvale/apps/client/src/ui/icons.ts": {
+    "mtime": 1790539712.3069959,
+    "seen": 1790756998.9066975,
+    "ast_hash": "73789a9e439e42139e476bb87d42d6e2",
+    "semantic_hash": "73789a9e439e42139e476bb87d42d6e2"
+  },
+  "hearthvale/apps/client/src/ui/legal.ts": {
+    "mtime": 1790578248.61927,
+    "seen": 1790756998.9066982,
+    "ast_hash": "566b1d849bc55158669921324932ff22",
+    "semantic_hash": "566b1d849bc55158669921324932ff22"
+  },
+  "hearthvale/apps/client/src/ui/screens.ts": {
+    "mtime": 1790578831.7459037,
+    "seen": 1790756998.906699,
+    "ast_hash": "48cc0acb904914fa0c09b2db40d79919",
+    "semantic_hash": "48cc0acb904914fa0c09b2db40d79919"
+  },
+  "hearthvale/apps/client/src/ui/settings.ts": {
+    "mtime": 1790578301.1476598,
+    "seen": 1790756998.9066997,
+    "ast_hash": "1a82ebed60be452febca819290412962",
+    "semantic_hash": "1a82ebed60be452febca819290412962"
+  },
+  "hearthvale/apps/client/src/vite-env.d.ts": {
+    "mtime": 1790525454.911829,
+    "seen": 1790756998.9067008,
+    "ast_hash": "d0707f5843a6ea7a565662efada0c547",
+    "semantic_hash": "d0707f5843a6ea7a565662efada0c547"
+  },
+  "hearthvale/apps/client/src/voice/voice.ts": {
+    "mtime": 1790544956.6795268,
+    "seen": 1790756998.9067016,
+    "ast_hash": "933a4817252b930b7575ba84d5085210",
+    "semantic_hash": "933a4817252b930b7575ba84d5085210"
+  },
+  "hearthvale/apps/client/tsconfig.json": {
+    "mtime": 1790519942.6144335,
+    "seen": 1790756998.9067023,
+    "ast_hash": "1889a21f108eff5f62ce95338cc1c4ba",
+    "semantic_hash": "1889a21f108eff5f62ce95338cc1c4ba"
+  },
+  "hearthvale/apps/client/vite.config.ts": {
+    "mtime": 1790541946.9789057,
+    "seen": 1790756998.906703,
+    "ast_hash": "6ecf97e708470fbdb0798d69a6534a2b",
+    "semantic_hash": "6ecf97e708470fbdb0798d69a6534a2b"
+  },
+  "hearthvale/apps/homebase/package.json": {
+    "mtime": 1790716948.6303043,
+    "seen": 1790756998.906704,
+    "ast_hash": "3df692af0ac5d93f386aae4bf3a8af81",
+    "semantic_hash": "3df692af0ac5d93f386aae4bf3a8af81"
+  },
+  "hearthvale/apps/homebase/src/dom.ts": {
+    "mtime": 1790717092.2907171,
+    "seen": 1790756998.9067047,
+    "ast_hash": "4f00ad500694ddc8e0242e0a6726f74c",
+    "semantic_hash": "4f00ad500694ddc8e0242e0a6726f74c"
+  },
+  "hearthvale/apps/homebase/src/engine.ts": {
+    "mtime": 1790717390.122603,
+    "seen": 1790756998.9067054,
+    "ast_hash": "8c6f5959586017721b2986e4990c8813",
+    "semantic_hash": "8c6f5959586017721b2986e4990c8813"
+  },
+  "hearthvale/apps/homebase/src/main.ts": {
+    "mtime": 1790722228.506961,
+    "seen": 1790756998.906706,
+    "ast_hash": "400941f21c89b1c74ce95fb71204ea30",
+    "semantic_hash": "400941f21c89b1c74ce95fb71204ea30"
+  },
+  "hearthvale/apps/homebase/src/store.ts": {
+    "mtime": 1790722352.3118253,
+    "seen": 1790756998.9067073,
+    "ast_hash": "0a07d825a0b4f6343be175856635a3ba",
+    "semantic_hash": "0a07d825a0b4f6343be175856635a3ba"
+  },
+  "hearthvale/apps/homebase/src/themes/gl.ts": {
+    "mtime": 1790718879.2303154,
+    "seen": 1790756998.9067082,
+    "ast_hash": "35b144fbba212ad30746d656b70ffb54",
+    "semantic_hash": "35b144fbba212ad30746d656b70ffb54"
+  },
+  "hearthvale/apps/homebase/src/themes/index.ts": {
+    "mtime": 1790718879.2303154,
+    "seen": 1790756998.906709,
+    "ast_hash": "58bcbb7867621bc95a4d68fd5a0361d4",
+    "semantic_hash": "58bcbb7867621bc95a4d68fd5a0361d4"
+  },
+  "hearthvale/apps/homebase/src/themes/particles.ts": {
+    "mtime": 1790717289.9380023,
+    "seen": 1790756998.90671,
+    "ast_hash": "9ef83e480bcc264b5ce899e30361b1d0",
+    "semantic_hash": "9ef83e480bcc264b5ce899e30361b1d0"
+  },
+  "hearthvale/apps/homebase/src/themes/types.ts": {
+    "mtime": 1790717140.0682466,
+    "seen": 1790756998.9067109,
+    "ast_hash": "c1f25b3716c2fed4299503e1e8e1dd16",
+    "semantic_hash": "c1f25b3716c2fed4299503e1e8e1dd16"
+  },
+  "hearthvale/apps/homebase/src/ui/forms.ts": {
+    "mtime": 1790717719.1242135,
+    "seen": 1790756998.9067116,
+    "ast_hash": "4a09e34417d7e00e80e8af0eefc4905e",
+    "semantic_hash": "4a09e34417d7e00e80e8af0eefc4905e"
+  },
+  "hearthvale/apps/homebase/src/ui/guide.ts": {
+    "mtime": 1790718037.023094,
+    "seen": 1790756998.9067123,
+    "ast_hash": "5d238b5653cfae85df7ef5205d5f808f",
+    "semantic_hash": "5d238b5653cfae85df7ef5205d5f808f"
+  },
+  "hearthvale/apps/homebase/src/ui/panel.ts": {
+    "mtime": 1790722352.3118253,
+    "seen": 1790756998.9067132,
+    "ast_hash": "8b5c48183c2da4ee0f34f2d10acfd236",
+    "semantic_hash": "8b5c48183c2da4ee0f34f2d10acfd236"
+  },
+  "hearthvale/apps/homebase/src/widgets/basic.ts": {
+    "mtime": 1790722228.506961,
+    "seen": 1790756998.9067142,
+    "ast_hash": "99e27e2a1959628924e1367f82fbb0e9",
+    "semantic_hash": "99e27e2a1959628924e1367f82fbb0e9"
+  },
+  "hearthvale/apps/homebase/src/widgets/data.ts": {
+    "mtime": 1790718653.4017327,
+    "seen": 1790756998.906715,
+    "ast_hash": "230f734a284e5d7073de53ca6ddf9e5b",
+    "semantic_hash": "230f734a284e5d7073de53ca6ddf9e5b"
+  },
+  "hearthvale/apps/homebase/src/widgets/index.ts": {
+    "mtime": 1790717666.3464098,
+    "seen": 1790756998.9067156,
+    "ast_hash": "edff642738c6176dd281e88a24e3cb72",
+    "semantic_hash": "edff642738c6176dd281e88a24e3cb72"
+  },
+  "hearthvale/apps/homebase/src/widgets/time.ts": {
+    "mtime": 1790717591.5035198,
+    "seen": 1790756998.9067163,
+    "ast_hash": "a35a5acb07aa4b09e5e4ab3dd570f2bf",
+    "semantic_hash": "a35a5acb07aa4b09e5e4ab3dd570f2bf"
+  },
+  "hearthvale/apps/homebase/src/widgets/tools.ts": {
+    "mtime": 1790717665.2741668,
+    "seen": 1790756998.9067175,
+    "ast_hash": "9d74a85509740e8c9520afcb43f79d9e",
+    "semantic_hash": "9d74a85509740e8c9520afcb43f79d9e"
+  },
+  "hearthvale/apps/homebase/src/widgets/types.ts": {
+    "mtime": 1790718397.301743,
+    "seen": 1790756998.9067183,
+    "ast_hash": "53882913f49242f66f9a2bbbb1e2f7d3",
+    "semantic_hash": "53882913f49242f66f9a2bbbb1e2f7d3"
+  },
+  "hearthvale/apps/homebase/tsconfig.json": {
+    "mtime": 1790716948.936921,
+    "seen": 1790756998.906719,
+    "ast_hash": "24ebca0a31a932129114f704188cd4d3",
+    "semantic_hash": "24ebca0a31a932129114f704188cd4d3"
+  },
+  "hearthvale/apps/homebase/vite.config.ts": {
+    "mtime": 1790716915.7415314,
+    "seen": 1790756998.9067197,
+    "ast_hash": "3aacf90d0f09616b7913c7596965401a",
+    "semantic_hash": "3aacf90d0f09616b7913c7596965401a"
+  },
+  "hearthvale/apps/omniprice/package.json": {
+    "mtime": 1790616974.9435878,
+    "seen": 1790756998.9067209,
+    "ast_hash": "47c76106654a7f26f6c43198360202fc",
+    "semantic_hash": "47c76106654a7f26f6c43198360202fc"
+  },
+  "hearthvale/apps/omniprice/src/api.ts": {
+    "mtime": 1790618923.3686652,
+    "seen": 1790756998.9067216,
+    "ast_hash": "6239c6439cc490c2fbb9607fafed3f47",
+    "semantic_hash": "6239c6439cc490c2fbb9607fafed3f47"
+  },
+  "hearthvale/apps/omniprice/src/chart.ts": {
+    "mtime": 1790617150.1302109,
+    "seen": 1790756998.9067223,
+    "ast_hash": "c299ad966b6d00d3454c1ed3bdc066ff",
+    "semantic_hash": "c299ad966b6d00d3454c1ed3bdc066ff"
+  },
+  "hearthvale/apps/omniprice/src/dom.ts": {
+    "mtime": 1790616634.4057207,
+    "seen": 1790756998.9067233,
+    "ast_hash": "707bb2c018135dcc67ba321faf544d61",
+    "semantic_hash": "707bb2c018135dcc67ba321faf544d61"
+  },
+  "hearthvale/apps/omniprice/src/format.ts": {
+    "mtime": 1790617084.6826751,
+    "seen": 1790756998.9067242,
+    "ast_hash": "eb7635504d5dcacb3a5ac2073cb7ec3a",
+    "semantic_hash": "eb7635504d5dcacb3a5ac2073cb7ec3a"
+  },
+  "hearthvale/apps/omniprice/src/main.ts": {
+    "mtime": 1790720648.5306375,
+    "seen": 1790756998.906725,
+    "ast_hash": "0f3347734b2cc9a2c67b8d7d46cc1eeb",
+    "semantic_hash": "0f3347734b2cc9a2c67b8d7d46cc1eeb"
+  },
+  "hearthvale/apps/omniprice/src/ranges.ts": {
+    "mtime": 1790616840.6618319,
+    "seen": 1790756998.9067254,
+    "ast_hash": "0d707e1690a1dcf120634bc71fb1d5ff",
+    "semantic_hash": "0d707e1690a1dcf120634bc71fb1d5ff"
+  },
+  "hearthvale/apps/omniprice/src/search.ts": {
+    "mtime": 1790616725.1843865,
+    "seen": 1790756998.9067264,
+    "ast_hash": "702f9cf49dea605d34fca74295e2519c",
+    "semantic_hash": "702f9cf49dea605d34fca74295e2519c"
+  },
+  "hearthvale/apps/omniprice/src/state.ts": {
+    "mtime": 1790618923.3686652,
+    "seen": 1790756998.906727,
+    "ast_hash": "a91b0718a458fc9f430d6a6141844aed",
+    "semantic_hash": "a91b0718a458fc9f430d6a6141844aed"
+  },
+  "hearthvale/apps/omniprice/src/views/compare.ts": {
+    "mtime": 1790618923.3721962,
+    "seen": 1790756998.906728,
+    "ast_hash": "5e974ea6bba921ea05756669801596df",
+    "semantic_hash": "5e974ea6bba921ea05756669801596df"
+  },
+  "hearthvale/apps/omniprice/src/views/detail.ts": {
+    "mtime": 1790618923.3706727,
+    "seen": 1790756998.9067287,
+    "ast_hash": "01f6e10b805c7e4b2ba98e599a2c4332",
+    "semantic_hash": "01f6e10b805c7e4b2ba98e599a2c4332"
+  },
+  "hearthvale/apps/omniprice/src/views/overview.ts": {
+    "mtime": 1790618944.602087,
+    "seen": 1790756998.9067295,
+    "ast_hash": "aabdbb23012b722e375cdf4f0efd6ba7",
+    "semantic_hash": "aabdbb23012b722e375cdf4f0efd6ba7"
+  },
+  "hearthvale/apps/omniprice/tsconfig.json": {
+    "mtime": 1790616555.3463268,
+    "seen": 1790756998.9067304,
+    "ast_hash": "ba764938d6db068eb28883b219d89f56",
+    "semantic_hash": "ba764938d6db068eb28883b219d89f56"
+  },
+  "hearthvale/apps/omniprice/vite.config.ts": {
+    "mtime": 1790616986.7740383,
+    "seen": 1790756998.906731,
+    "ast_hash": "eb15fc88a8d9b2595147bb5e1f051ffe",
+    "semantic_hash": "eb15fc88a8d9b2595147bb5e1f051ffe"
+  },
+  "hearthvale/apps/server/package.json": {
+    "mtime": 1790578857.5916698,
+    "seen": 1790756998.9067318,
+    "ast_hash": "fe5b4c9b3d085f49da5cc0f752e9f545",
+    "semantic_hash": "fe5b4c9b3d085f49da5cc0f752e9f545"
+  },
+  "hearthvale/apps/server/src/api/routes.ts": {
+    "mtime": 1790578218.5969186,
+    "seen": 1790756998.9067328,
+    "ast_hash": "7cdd3a64a24513e8b821a06cccb99be3",
+    "semantic_hash": "7cdd3a64a24513e8b821a06cccb99be3"
+  },
+  "hearthvale/apps/server/src/auth/crypto.ts": {
+    "mtime": 1790519657.9310715,
+    "seen": 1790756998.9067333,
+    "ast_hash": "8a97ed0c7d0e8e9d344a440f29dcf914",
+    "semantic_hash": "8a97ed0c7d0e8e9d344a440f29dcf914"
+  },
+  "hearthvale/apps/server/src/auth/discordOAuth.ts": {
+    "mtime": 1790523737.126676,
+    "seen": 1790756998.906734,
+    "ast_hash": "d95378c5d7ef669c779f81ff9329360e",
+    "semantic_hash": "d95378c5d7ef669c779f81ff9329360e"
+  },
+  "hearthvale/apps/server/src/auth/routes.ts": {
+    "mtime": 1790527828.2942998,
+    "seen": 1790756998.9067352,
+    "ast_hash": "72539093dcff1df0ac4c7d81763419bd",
+    "semantic_hash": "72539093dcff1df0ac4c7d81763419bd"
+  },
+  "hearthvale/apps/server/src/auth/sessions.ts": {
+    "mtime": 1790519677.3315048,
+    "seen": 1790756998.9067357,
+    "ast_hash": "f67a20cc92967f067e88abec95994137",
+    "semantic_hash": "f67a20cc92967f067e88abec95994137"
+  },
+  "hearthvale/apps/server/src/config.ts": {
+    "mtime": 1790527828.2942998,
+    "seen": 1790756998.9067366,
+    "ast_hash": "9b78c0fc4a6a5b97a211b4805cffb8f5",
+    "semantic_hash": "9b78c0fc4a6a5b97a211b4805cffb8f5"
+  },
+  "hearthvale/apps/server/src/db/index.ts": {
+    "mtime": 1790519612.874446,
+    "seen": 1790756998.9067373,
+    "ast_hash": "99cd7a780298f02b9542c65dd73d5dcc",
+    "semantic_hash": "99cd7a780298f02b9542c65dd73d5dcc"
+  },
+  "hearthvale/apps/server/src/db/repos.test.ts": {
+    "mtime": 1790578857.5496008,
+    "seen": 1790756998.9067383,
+    "ast_hash": "748218b46a4b744f7c89cd6dadfdf6c8",
+    "semantic_hash": "748218b46a4b744f7c89cd6dadfdf6c8"
+  },
+  "hearthvale/apps/server/src/db/repos.ts": {
+    "mtime": 1790578218.5964012,
+    "seen": 1790756998.9067392,
+    "ast_hash": "9cbf124cee03a8bc71251f164ef3f521",
+    "semantic_hash": "9cbf124cee03a8bc71251f164ef3f521"
+  },
+  "hearthvale/apps/server/src/discord/bot.ts": {
+    "mtime": 1790519740.8273437,
+    "seen": 1790756998.90674,
+    "ast_hash": "0b26cc300466312f49aa64e805dc6512",
+    "semantic_hash": "0b26cc300466312f49aa64e805dc6512"
+  },
+  "hearthvale/apps/server/src/discord/messages.ts": {
+    "mtime": 1790519775.413139,
+    "seen": 1790756998.9067404,
+    "ast_hash": "a791945c8f727f9f5ea379187f9b23ea",
+    "semantic_hash": "a791945c8f727f9f5ea379187f9b23ea"
+  },
+  "hearthvale/apps/server/src/discord/permissions.test.ts": {
+    "mtime": 1790544993.9638028,
+    "seen": 1790756998.9067416,
+    "ast_hash": "03c0dd86bbd7bc82e7eaaf949d776b2e",
+    "semantic_hash": "03c0dd86bbd7bc82e7eaaf949d776b2e"
+  },
+  "hearthvale/apps/server/src/discord/permissions.ts": {
+    "mtime": 1790544806.606819,
+    "seen": 1790756998.9067423,
+    "ast_hash": "1a999af15376172c9aec0a798797e0d5",
+    "semantic_hash": "1a999af15376172c9aec0a798797e0d5"
+  },
+  "hearthvale/apps/server/src/index.ts": {
+    "mtime": 1790544881.86237,
+    "seen": 1790756998.906744,
+    "ast_hash": "4a2886fe025f0a768a912540dc86690c",
+    "semantic_hash": "4a2886fe025f0a768a912540dc86690c"
+  },
+  "hearthvale/apps/server/src/realtime/guildRoom.test.ts": {
+    "mtime": 1790545197.7719314,
+    "seen": 1790756998.9067447,
+    "ast_hash": "2b9fe5fd3a9fca587e79c71d8e6e16f1",
+    "semantic_hash": "2b9fe5fd3a9fca587e79c71d8e6e16f1"
+  },
+  "hearthvale/apps/server/src/realtime/guildRoom.ts": {
+    "mtime": 1790544837.8988712,
+    "seen": 1790756998.9067457,
+    "ast_hash": "0fe15bc071959cd987768760504479b2",
+    "semantic_hash": "0fe15bc071959cd987768760504479b2"
+  },
+  "hearthvale/apps/server/src/realtime/rateLimit.ts": {
+    "mtime": 1790519842.6703556,
+    "seen": 1790756998.9067466,
+    "ast_hash": "363ba582bd372154cf76547a7b7bd1d1",
+    "semantic_hash": "363ba582bd372154cf76547a7b7bd1d1"
+  },
+  "hearthvale/apps/server/src/realtime/wsServer.ts": {
+    "mtime": 1790578218.5974321,
+    "seen": 1790756998.9067473,
+    "ast_hash": "63fd03636fd139ea04fc2aec8a4ce330",
+    "semantic_hash": "63fd03636fd139ea04fc2aec8a4ce330"
+  },
+  "hearthvale/apps/server/src/voice/bridge.ts": {
+    "mtime": 1790523513.370098,
+    "seen": 1790756998.906748,
+    "ast_hash": "50b7078bcc90b75bb980c40f15477af0",
+    "semantic_hash": "50b7078bcc90b75bb980c40f15477af0"
+  },
+  "hearthvale/apps/server/src/voice/livekit.ts": {
+    "mtime": 1790544778.9772,
+    "seen": 1790756998.906749,
+    "ast_hash": "3990fea911ecd75e3caf92d4a4a7abeb",
+    "semantic_hash": "3990fea911ecd75e3caf92d4a4a7abeb"
+  },
+  "hearthvale/apps/server/src/world/worldService.ts": {
+    "mtime": 1790523541.6602156,
+    "seen": 1790756998.9067497,
+    "ast_hash": "86ce1e4c5c979d7b130b75871aae31a1",
+    "semantic_hash": "86ce1e4c5c979d7b130b75871aae31a1"
+  },
+  "hearthvale/apps/server/tsconfig.json": {
+    "mtime": 1790519592.9131496,
+    "seen": 1790756998.9067504,
+    "ast_hash": "3db7540febadc4fac72b02b96a9b8bf8",
+    "semantic_hash": "3db7540febadc4fac72b02b96a9b8bf8"
+  },
+  "hearthvale/package.json": {
+    "mtime": 1790720049.0711977,
+    "seen": 1790756998.9067512,
+    "ast_hash": "127d6368c40459bea7b265836bcd308b",
+    "semantic_hash": "127d6368c40459bea7b265836bcd308b"
+  },
+  "hearthvale/packages/shared/package.json": {
+    "mtime": 1790519997.8979194,
+    "seen": 1790756998.906752,
+    "ast_hash": "8ea3db0ff1c0fea669241bd02735c51c",
+    "semantic_hash": "8ea3db0ff1c0fea669241bd02735c51c"
+  },
+  "hearthvale/packages/shared/src/character.ts": {
+    "mtime": 1790544050.4653802,
+    "seen": 1790756998.9067528,
+    "ast_hash": "6de9f2a9fe619f6f1a4b293b72d7c09b",
+    "semantic_hash": "6de9f2a9fe619f6f1a4b293b72d7c09b"
+  },
+  "hearthvale/packages/shared/src/constants.ts": {
+    "mtime": 1790519371.8625596,
+    "seen": 1790756998.9067535,
+    "ast_hash": "19ae93c122fb79e94c7e862519d80086",
+    "semantic_hash": "19ae93c122fb79e94c7e862519d80086"
+  },
+  "hearthvale/packages/shared/src/index.ts": {
+    "mtime": 1790519567.0680914,
+    "seen": 1790756998.9067543,
+    "ast_hash": "74bc6747d7b132559101be8f70c2f4e0",
+    "semantic_hash": "74bc6747d7b132559101be8f70c2f4e0"
+  },
+  "hearthvale/packages/shared/src/protocol.ts": {
+    "mtime": 1790544814.087066,
+    "seen": 1790756998.906755,
+    "ast_hash": "d9f4acb821f547993713dc1091549d8e",
+    "semantic_hash": "d9f4acb821f547993713dc1091549d8e"
+  },
+  "hearthvale/packages/shared/src/world/generate.test.ts": {
+    "mtime": 1790519997.8871918,
+    "seen": 1790756998.9067562,
+    "ast_hash": "1daafd52095f37849f3e0eeafceb177d",
+    "semantic_hash": "1daafd52095f37849f3e0eeafceb177d"
+  },
+  "hearthvale/packages/shared/src/world/generate.ts": {
+    "mtime": 1790519997.8856726,
+    "seen": 1790756998.9067566,
+    "ast_hash": "f198981da5039f6a257012959ef62a8a",
+    "semantic_hash": "f198981da5039f6a257012959ef62a8a"
+  },
+  "hearthvale/packages/shared/src/world/layout.ts": {
+    "mtime": 1790519997.88416,
+    "seen": 1790756998.9067574,
+    "ast_hash": "03291dac2498328aa2bdc547cd1434f9",
+    "semantic_hash": "03291dac2498328aa2bdc547cd1434f9"
+  },
+  "hearthvale/packages/shared/src/world/rng.ts": {
+    "mtime": 1790519429.1401665,
+    "seen": 1790756998.9067583,
+    "ast_hash": "2fec25a2d30bce49d8b8346585c7a7d2",
+    "semantic_hash": "2fec25a2d30bce49d8b8346585c7a7d2"
+  },
+  "hearthvale/packages/shared/src/world/zones.ts": {
+    "mtime": 1790519564.926218,
+    "seen": 1790756998.9067593,
+    "ast_hash": "218fb5d5dcade7815304a3cb5b4df0df",
+    "semantic_hash": "218fb5d5dcade7815304a3cb5b4df0df"
+  },
+  "hearthvale/packages/shared/tsconfig.json": {
+    "mtime": 1790519997.8979194,
+    "seen": 1790756998.9067597,
+    "ast_hash": "e58561fedb69d7ca4e957098011364d1",
+    "semantic_hash": "e58561fedb69d7ca4e957098011364d1"
+  },
+  "hearthvale/scripts/build-site.mjs": {
+    "mtime": 1790720617.4931245,
+    "seen": 1790756998.9067607,
+    "ast_hash": "0180c5aa3d076d61b76ba59cfb868c5a",
+    "semantic_hash": "0180c5aa3d076d61b76ba59cfb868c5a"
+  },
+  "hearthvale/scripts/build-vercel.mjs": {
+    "mtime": 1790720045.7404997,
+    "seen": 1790756998.9067614,
+    "ast_hash": "581599f481324a8e99535771f987bfef",
+    "semantic_hash": "581599f481324a8e99535771f987bfef"
+  },
+  "hearthvale/scripts/check-omniprice.mjs": {
+    "mtime": 1790616488.2373514,
+    "seen": 1790756998.9067621,
+    "ast_hash": "7f43943bc3e6e0e22707c50608625de1",
+    "semantic_hash": "7f43943bc3e6e0e22707c50608625de1"
+  },
+  "hearthvale/scripts/voice.mjs": {
+    "mtime": 1790521314.1789596,
+    "seen": 1790756998.906763,
+    "ast_hash": "c6e3ff7056e4d5813cf215fbf23adc08",
+    "semantic_hash": "c6e3ff7056e4d5813cf215fbf23adc08"
+  },
+  "hearthvale/tsconfig.base.json": {
+    "mtime": 1790519339.7605863,
+    "seen": 1790756998.9067638,
+    "ast_hash": "138c010b2db29820e6e66fdcbb0fce74",
+    "semantic_hash": "138c010b2db29820e6e66fdcbb0fce74"
+  },
+  "hearthvale/vercel.json": {
+    "mtime": 1790720049.0687861,
+    "seen": 1790756998.9067647,
+    "ast_hash": "67abdfd7e86064e8240bb4c7f245d075",
+    "semantic_hash": "67abdfd7e86064e8240bb4c7f245d075"
+  },
+  "browser-home-page-original/index.html": {
+    "mtime": 1790716768.0736423,
+    "seen": 1790756998.9067655,
+    "ast_hash": "518648bbd18d0f0b9640e716467bc290",
+    "semantic_hash": "518648bbd18d0f0b9640e716467bc290"
+  },
+  "hearthvale/CLAUDE.md": {
+    "mtime": 1790521753.9577374,
+    "seen": 1790756998.9067664,
+    "ast_hash": "fd754350268c6bef2e637f0abdefedc9",
+    "semantic_hash": "fd754350268c6bef2e637f0abdefedc9"
+  },
+  "hearthvale/README.md": {
+    "mtime": 1790722352.3154528,
+    "seen": 1790756998.9067671,
+    "ast_hash": "02069c99e7530c397cdb0e0be5434452",
+    "semantic_hash": "02069c99e7530c397cdb0e0be5434452"
+  },
+  "hearthvale/apps/client/index.html": {
+    "mtime": 1790578333.5128553,
+    "seen": 1790756998.9067678,
+    "ast_hash": "60f3ea65bc8357e3755b44b5a1f2729e",
+    "semantic_hash": "60f3ea65bc8357e3755b44b5a1f2729e"
+  },
+  "hearthvale/apps/homebase/index.html": {
+    "mtime": 1790717914.923888,
+    "seen": 1790756998.9067686,
+    "ast_hash": "8a21f73987b404549ac0517eb0e0c14a",
+    "semantic_hash": "8a21f73987b404549ac0517eb0e0c14a"
+  },
+  "hearthvale/apps/omniprice/index.html": {
+    "mtime": 1790616595.9799623,
+    "seen": 1790756998.9067695,
+    "ast_hash": "de888a3fb47ddc5d1a3f122dfbe1150e",
+    "semantic_hash": "de888a3fb47ddc5d1a3f122dfbe1150e"
+  },
+  "hearthvale/docker-compose.yml": {
+    "mtime": 1790525058.585395,
+    "seen": 1790756998.9067702,
+    "ast_hash": "29621c41fc6b2f30236e5dfbe15a02ba",
+    "semantic_hash": "29621c41fc6b2f30236e5dfbe15a02ba"
+  },
+  "hearthvale/livekit.yaml": {
+    "mtime": 1790521635.9674814,
+    "seen": 1790756998.9067712,
+    "ast_hash": "bb8f97fadc1f5ebc34c64065f4c15db0",
+    "semantic_hash": "bb8f97fadc1f5ebc34c64065f4c15db0"
+  },
+  "hearthvale/site/pages/404.html": {
+    "mtime": 1790578605.180259,
+    "seen": 1790756998.906772,
+    "ast_hash": "6067f939c23aec052178888d62428e32",
+    "semantic_hash": "6067f939c23aec052178888d62428e32"
+  },
+  "hearthvale/site/pages/big7.html": {
+    "mtime": 1790718981.437066,
+    "seen": 1790756998.906773,
+    "ast_hash": "2c84ed2bd12ed19a72e0a7d57c3a4850",
+    "semantic_hash": "2c84ed2bd12ed19a72e0a7d57c3a4850"
+  },
+  "hearthvale/site/pages/cookies.html": {
+    "mtime": 1790719031.5800724,
+    "seen": 1790756998.9067738,
+    "ast_hash": "8b8ca30343849590e1471b1f186f6f25",
+    "semantic_hash": "8b8ca30343849590e1471b1f186f6f25"
+  },
+  "hearthvale/site/pages/home.html": {
+    "mtime": 1790718981.437585,
+    "seen": 1790756998.9067745,
+    "ast_hash": "bb924909284774959ad3b80841f3cf84",
+    "semantic_hash": "bb924909284774959ad3b80841f3cf84"
+  },
+  "hearthvale/site/pages/privacy.html": {
+    "mtime": 1790722352.3136785,
+    "seen": 1790756998.9067752,
+    "ast_hash": "98d079ea924fe74ee97af0b51483f7f9",
+    "semantic_hash": "98d079ea924fe74ee97af0b51483f7f9"
+  },
+  "hearthvale/site/pages/terms.html": {
+    "mtime": 1790719031.5785494,
+    "seen": 1790756998.906776,
+    "ast_hash": "a398c21fb34b88338b88f4c3e6079a53",
+    "semantic_hash": "a398c21fb34b88338b88f4c3e6079a53"
+  },
+  "hearthvale/apps/client/public/favicon.svg": {
+    "mtime": 1790520079.4983044,
+    "seen": 1790756998.906777,
+    "ast_hash": "684c6c69d85c471d29f6743c35a50a60",
+    "semantic_hash": "684c6c69d85c471d29f6743c35a50a60"
+  },
+  "hearthvale/apps/client/public/og-image.png": {
+    "mtime": 1790541925.5580323,
+    "seen": 1790756998.9067776,
+    "ast_hash": "8329deb958b45e1d0b3d277e06679bdf",
+    "semantic_hash": "8329deb958b45e1d0b3d277e06679bdf"
+  },
+  "hearthvale/apps/homebase/public/favicon.svg": {
+    "mtime": 1790717917.6697474,
+    "seen": 1790756998.9067786,
+    "ast_hash": "63e0e2c817d5d96cca1fb6068d67f6da",
+    "semantic_hash": "63e0e2c817d5d96cca1fb6068d67f6da"
+  },
+  "hearthvale/apps/homebase/public/og-homebase.jpg": {
+    "mtime": 1790718897.300409,
+    "seen": 1790756998.9067793,
+    "ast_hash": "dea55ae0dc6aaab48b515267e092da30",
+    "semantic_hash": "dea55ae0dc6aaab48b515267e092da30"
+  },
+  "hearthvale/apps/omniprice/public/favicon.svg": {
+    "mtime": 1790616596.0677843,
+    "seen": 1790756998.9067802,
+    "ast_hash": "b2c7c086b2f8bd10494348cb724b77f4",
+    "semantic_hash": "b2c7c086b2f8bd10494348cb724b77f4"
+  },
+  "hearthvale/apps/omniprice/public/og-omniprice.png": {
+    "mtime": 1790617208.386976,
+    "seen": 1790756998.906781,
+    "ast_hash": "8a6d945baa251752a28aa50896869c7c",
+    "semantic_hash": "8a6d945baa251752a28aa50896869c7c"
+  },
+  "hearthvale/site/assets/hearthvale-shot.jpg": {
+    "mtime": 1790578737.130517,
+    "seen": 1790756998.9067817,
+    "ast_hash": "87c8440cfeec30669e24de81b49716f3",
+    "semantic_hash": "87c8440cfeec30669e24de81b49716f3"
+  },
+  "hearthvale/site/assets/homebase-shot.jpg": {
+    "mtime": 1790718897.1728508,
+    "seen": 1790756998.9067824,
+    "ast_hash": "f2769c3f6b03279b80d48c7fb2b2ec1e",
+    "semantic_hash": "f2769c3f6b03279b80d48c7fb2b2ec1e"
+  },
+  "hearthvale/site/assets/logo.svg": {
+    "mtime": 1790578786.71507,
+    "seen": 1790756998.9067833,
+    "ast_hash": "40115282a7d6e9710a884be50c809d0e",
+    "semantic_hash": "40115282a7d6e9710a884be50c809d0e"
+  },
+  "hearthvale/site/assets/og-bigtomdev.png": {
+    "mtime": 1790578788.229729,
+    "seen": 1790756998.906784,
+    "ast_hash": "d743390996ad7e18a78d645828e02902",
+    "semantic_hash": "d743390996ad7e18a78d645828e02902"
+  },
+  "hearthvale/site/assets/omniprice-shot.jpg": {
+    "mtime": 1790617205.6208515,
+    "seen": 1790756998.906785,
+    "ast_hash": "51946e6212da1b85cfa51fe081ac136b",
+    "semantic_hash": "51946e6212da1b85cfa51fe081ac136b"
+  }
+}

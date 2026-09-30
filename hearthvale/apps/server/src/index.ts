@@ -18,6 +18,7 @@ import { PermissionService } from './discord/permissions.ts';
 import { MessageService } from './discord/messages.ts';
 import { WorldService } from './world/worldService.ts';
 import { RealtimeServer } from './realtime/wsServer.ts';
+import { CardServer } from './cards/cardServer.ts';
 import { createVoiceTokenIssuer } from './voice/livekit.ts';
 import { VoiceBridgeManager } from './voice/bridge.ts';
 import { registerApiRoutes } from './api/routes.ts';
@@ -44,6 +45,7 @@ const world = new WorldService(bot, repos, perms, app.log);
 const voice = createVoiceTokenIssuer(config);
 const bridges = new VoiceBridgeManager(config, bot, app.log);
 const realtime = new RealtimeServer({ config, log: app.log, sessions, repos, bot, perms, messages, world, bridges, voice });
+const cards = new CardServer({ config, log: app.log });
 
 await app.register(cookie);
 // Only our own frontend origin may call the API with credentials (matters when the client is
@@ -71,7 +73,9 @@ if (existsSync(clientDist)) {
   });
 }
 
-app.server.on('upgrade', (req, socket, head) => realtime.handleUpgrade(req, socket, head));
+app.server.on('upgrade', (req, socket, head) =>
+  req.url?.startsWith('/cards') ? cards.handleUpgrade(req, socket, head) : realtime.handleUpgrade(req, socket, head),
+);
 
 // Housekeeping
 setInterval(() => {
@@ -82,6 +86,7 @@ setInterval(() => {
 const shutdown = async (signal: string) => {
   app.log.info(`${signal} received, shutting down`);
   realtime.close();
+  cards.close();
   await bridges.shutdown().catch(() => undefined);
   await bot.stop().catch(() => undefined);
   await app.close();

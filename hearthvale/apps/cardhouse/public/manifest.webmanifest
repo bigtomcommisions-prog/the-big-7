@@ -1,0 +1,12 @@
+{
+  "name": "Cardhouse",
+  "short_name": "Cardhouse",
+  "description": "Card games made for your phone. Play money only.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#16191f",
+  "theme_color": "#16191f",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

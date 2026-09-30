@@ -13,6 +13,7 @@ const steps = [
   'npm run build -w @hearthvale/client',
   'npm run build -w @bigtomdev/omniprice',
   'npm run build -w @bigtomdev/homebase',
+  'npm run build -w @bigtomdev/cardhouse',
   'node scripts/build-site.mjs',
 ];
 
