@@ -7,7 +7,7 @@ The main collection is **[The Big 7](https://bigtomdev.fyi/the-big-7/)**: seven 
 | # | Project | What it is | Link |
 |---|---|---|---|
 | 01 | **Hearthvale** | Your Discord server as a cosy voxel world you can walk around in | [bigtomdev.fyi/hearthvale](https://bigtomdev.fyi/hearthvale/) |
-| 02 | **OmniPrice** | Track and compare the price of everything, from eggs to game items | [bigtomdev.fyi/omniprice](https://bigtomdev.fyi/omniprice/) |
+| 02 | **OmniPrice** | Track and compare the price of everything, from eggs to oil to wages | [bigtomdev.fyi/omniprice](https://bigtomdev.fyi/omniprice/) |
 | 03 | **Homebase** | A private, animated browser start page | [bigtomdev.fyi/homebase](https://bigtomdev.fyi/homebase/) |
 | 04 | **Cardhouse** | Online card games made for your phone | [bigtomdev.fyi/cardhouse](https://bigtomdev.fyi/cardhouse/) |
 | 05–07 | Coming soon | Not revealed yet | |
@@ -16,7 +16,7 @@ The main collection is **[The Big 7](https://bigtomdev.fyi/the-big-7/)**: seven 
 
 ### 01 · Hearthvale
 
-![A voxel village square surrounded by trees, houses and lamp-lit paths](hearthvale/apps/client/public/og-image.png)
+![A voxel village square surrounded by trees, houses and lamp-lit paths](hearthvale/apps/hearthvale/public/og-image.png)
 
 Log in with Discord, pick a server, and it becomes a world: categories are towns, text channels are houses, and voice channels are open-air gazebos. Step into a house to read and post real messages. Talk to nearby players with proximity voice. Build your own voxel character.
 
@@ -26,10 +26,7 @@ Built with three.js, a Fastify and WebSocket server, discord.js, SQLite and Live
 
 ![OmniPrice](hearthvale/apps/omniprice/public/og-omniprice.png)
 
-Charts and comparisons for more than 200 price series, on two pages:
-
-- **Real markets:** food, wages, energy, commodities, currencies, crypto, inflation and interest rates, from official and open sources (ONS, BLS, the ECB and others). Prices can be shown in any of about 30 currencies.
-- **Game markets:** player-run economies in Old School RuneScape, RuneScape 3, Albion Online, Warframe and Hypixel SkyBlock (Bazaar and Auction House), in each game's own currency.
+Charts and comparisons for 140 price series: food, wages, energy, commodities, currencies, crypto, inflation and interest rates, from official and open sources (ONS, BLS, the ECB and others). Prices can be shown in any of 30 currencies.
 
 Add up to five series to a comparison chart and share the link.
 
@@ -61,7 +58,7 @@ Inside `hearthvale/`:
 
 | Path | Contents |
 |---|---|
-| `apps/client` | Hearthvale (the voxel world) |
+| `apps/hearthvale` | Hearthvale (the voxel world) |
 | `apps/omniprice` | OmniPrice |
 | `apps/homebase` | Homebase |
 | `apps/cardhouse` | Cardhouse |

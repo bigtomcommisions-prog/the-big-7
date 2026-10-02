@@ -16,13 +16,13 @@ function omnipriceApi(): Plugin {
   };
 }
 
-// Served at https://bigtomdev.fyi/homebase/, emitted next to the other apps in apps/client/dist.
+// Served at https://bigtomdev.fyi/homebase/, emitted next to the other apps in dist/.
 export default defineConfig({
   base: '/homebase/',
   plugins: [omnipriceApi()],
   server: { port: 5175, strictPort: true },
   build: {
-    outDir: '../client/dist/homebase',
+    outDir: '../../dist/homebase',
     emptyOutDir: true,
     target: 'es2022',
   },

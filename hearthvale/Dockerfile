@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/server/package.json apps/server/
-COPY apps/client/package.json apps/client/
+COPY apps/hearthvale/package.json apps/hearthvale/
 RUN npm ci
 COPY . .
 RUN npm run build
@@ -16,10 +16,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/server/package.json apps/server/
-COPY apps/client/package.json apps/client/
+COPY apps/hearthvale/package.json apps/hearthvale/
 RUN npm ci --omit=dev -w @hearthvale/server --include-workspace-root=false && npm cache clean --force
 COPY --from=build /app/apps/server/dist apps/server/dist
-COPY --from=build /app/apps/client/dist apps/client/dist
+COPY --from=build /app/dist dist
 RUN mkdir -p /app/data && chown node:node /app/data
 USER node
 WORKDIR /app/apps/server

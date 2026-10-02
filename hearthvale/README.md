@@ -4,7 +4,7 @@
 
 **Live at [bigtomdev.fyi/hearthvale](https://bigtomdev.fyi/hearthvale)**
 
-![A voxel village square surrounded by trees, houses and lamp-lit paths](apps/client/public/og-image.png)
+![A voxel village square surrounded by trees, houses and lamp-lit paths](apps/hearthvale/public/og-image.png)
 
 Hearthvale turns a Discord server into a cosy, persistent voxel world:
 
@@ -142,7 +142,7 @@ hearthvale/
 │     ├─ voice/                # LiveKit token minting, Discord voice bridge
 │     ├─ api/routes.ts         # REST: me, guilds, character, prefs, messages, voice token
 │     └─ db/                   # SQLite schema/migrations + repositories
-├─ apps/client/                # Vite + three.js (no UI framework)
+├─ apps/hearthvale/                # Vite + three.js (no UI framework)
 │  └─ src/
 │     ├─ main.ts               # Login → server picker → world
 │     ├─ game/                 # Engine, world builder, player, camera, collision, avatars, ambience
@@ -242,7 +242,7 @@ One Node process runs the HTTP API, the OAuth flow, the WebSocket server and the
 
 Proximity voice in the rest of the world is independent, running over WebRTC through a self-hostable **LiveKit** SFU. The app server only mints short-lived tokens (microphone publishing only, one room per Discord server, identity = Discord user ID, after re-verifying membership).
 
-How it works on the client (`apps/client/src/voice/voice.ts`):
+How it works on the client (`apps/hearthvale/src/voice/voice.ts`):
 
 - **Permission:** the microphone is requested **only when you click "Join voice"**. If you deny it, have no mic, or the mic is busy, you join **listen-only** with a clear message.
 - **Selective subscription:** you only subscribe to speakers within about 32 m, so bandwidth scales with the local crowd.
@@ -317,7 +317,7 @@ Browser ──▶ bigtomdev.fyi/hearthvale ──▶ Vercel (static frontend)
 | Voice | LiveKit Cloud | Free tier |
 | DNS | Cloudflare: `@` A record `76.76.21.21` (Vercel, DNS only); `api` CNAME `<tunnel-id>.cfargotunnel.com` (proxied) | Domain only |
 
-- **Deploy the frontend:** `npx vercel --prod` from the repo root. Vercel runs `npm run build:vercel` (`scripts/build-vercel.mjs`), which builds Hearthvale, OmniPrice, Homebase and the site pages into `apps/client/dist/`. `.vercelignore` keeps `.env*`, `data` and `tools` out of the upload.
+- **Deploy the frontend:** `npx vercel --prod` from the repo root. Vercel runs `npm run build:vercel` (`scripts/build-vercel.mjs`), which builds Hearthvale, OmniPrice, Homebase and the site pages into `dist/`. `.vercelignore` keeps `.env*`, `data` and `tools` out of the upload.
 - **Run the backend:** `npm run start:prod`. It builds the server and starts it with `.env.production`.
 - **Discord Developer Portal:** OAuth2 → Redirects must include `https://api.bigtomdev.fyi/auth/callback`.
 - The site only works while the backend machine is on. For a free always-on machine, an **Oracle Cloud Always Free** VM works well. Free tiers that sleep when idle (Render, Koyeb) disconnect the bot and lose the database, so avoid them.
@@ -346,7 +346,7 @@ The same Vercel project also serves the Big Tom Dev site around Hearthvale:
 | `/hearthvale/`, `/omniprice/`, `/homebase/`, `/cardhouse/` | The apps |
 
 - The pages are HTML fragments in `site/pages/`, and the styles, logo and images are in `site/assets/`.
-- `node scripts/build-site.mjs` (also `npm run build:site`) wraps each page in the shared banner and footer. The banner has the logo, "Big Tom Dev" and two tabs, Home and The Big 7. Projects are reached from those pages, not from the banner. It writes the result into `apps/client/dist/` next to the app, and Vercel runs it after the client build.
+- `node scripts/build-site.mjs` (also `npm run build:site`) wraps each page in the shared banner and footer. The banner has the logo, "Big Tom Dev" and two tabs, Home and The Big 7. Projects are reached from those pages, not from the banner. It writes the result into `dist/` next to the app, and Vercel runs it after the client build.
 - The contact email and the "last updated" date for the legal pages are set at the top of `scripts/build-site.mjs`.
 - To fill one of the Big 7 slots, replace its `<section class="slot">` in `site/pages/big7.html`.
 
@@ -361,7 +361,7 @@ OmniPrice (`/omniprice/`, project 02 of The Big 7) tracks and compares prices: f
 
 | Part | Where |
 |---|---|
-| App (Vite + TypeScript + uPlot) | `apps/omniprice/`, built into `apps/client/dist/omniprice/` |
+| App (Vite + TypeScript + uPlot) | `apps/omniprice/`, built into `dist/omniprice/` |
 | Data API (Vercel Function) | `api/omniprice.js` → `api/_omniprice/` (catalogue, fetchers, handler) |
 | Source check | `npm run check:omniprice`: fetches every series and flags failures or stale data |
 
@@ -389,7 +389,7 @@ Homebase (`/homebase/`, project 03 of The Big 7) is a private browser start page
 
 | Part | Where |
 |---|---|
-| App (Vite + TypeScript, no framework) | `apps/homebase/`, built into `apps/client/dist/homebase/` |
+| App (Vite + TypeScript, no framework) | `apps/homebase/`, built into `dist/homebase/` |
 | Themes | `src/themes/`: `gl.ts` (WebGL fragment shaders), `particles.ts` (canvas 2D), `index.ts` (registry + customisable params) |
 | Renderer | `src/engine.ts`: DPR-aware sizing, adaptive resolution, pause when hidden, reduced-motion support, CSS fallback without WebGL |
 | Widgets | `src/widgets/` (20 widgets; settings forms are generated from each widget's `fields`) |
@@ -415,7 +415,7 @@ Cardhouse (`/cardhouse/`, project 04 of The Big 7) is an online card room built 
 |---|---|
 | Rules engine (pure TypeScript, no I/O) | `packages/cards/`: `cards.ts` (deck, `crypto.randomInt` shuffle, 5-card and 3-card ranking), `poker.ts` (no-limit betting, side and split pots, for Hold'em, Five Card Draw, Three Card Poker and nine-card), `house.ts` (Blackjack against the dealer) |
 | Game server | `apps/server/src/cards/cardServer.ts`: the `/cards` WebSocket on the existing backend (`wss://api.bigtomdev.fyi/cards`) |
-| App (Vite + TypeScript, no framework) | `apps/cardhouse/`, built into `apps/client/dist/cardhouse/` |
+| App (Vite + TypeScript, no framework) | `apps/cardhouse/`, built into `dist/cardhouse/` |
 
 - **Run it locally:** start the backend (`npm run dev`), then `npm run dev:cardhouse` → <http://localhost:5176/cardhouse/>. Vite proxies `/cards` to the backend on port 3000. Open a second browser window to play against yourself.
 - **Deploying:** `npm run build:vercel` builds the app. The backend needs rebuilding and restarting on the server machine (`npm run build`, then `npm run start:prod`) to get the `/cards` endpoint. Nothing new to configure: it uses the existing tunnel and `APP_ORIGIN` for its Origin check.
@@ -431,7 +431,7 @@ Cardhouse (`/cardhouse/`, project 04 of The Big 7) is an online card room built 
 
 ### Link previews
 
-Pasting the link into Discord, Slack, X or iMessage shows a card with the title, description and `apps/client/public/og-image.png` (1200×630). The tags are in `apps/client/index.html`. Image URLs must be absolute, so they're built from `VITE_SITE_URL` at build time.
+Pasting the link into Discord, Slack, X or iMessage shows a card with the title, description and `apps/hearthvale/public/og-image.png` (1200×630). The tags are in `apps/hearthvale/index.html`. Image URLs must be absolute, so they're built from `VITE_SITE_URL` at build time.
 
 - Each app has its own preview image, for example `apps/cardhouse/public/og-cardhouse.png`.
 - To change the image, replace `og-image.png` (PNG or JPG; SVG isn't supported by Discord) and redeploy.

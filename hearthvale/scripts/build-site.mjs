@@ -1,4 +1,4 @@
-// Builds the Big Tom Dev site (home, The Big 7, legal pages) into apps/client/dist/, next to the
+// Builds the Big Tom Dev site (home, The Big 7, legal pages) into dist/, next to the
 // Hearthvale app at /hearthvale/. Pages in site/pages/ are HTML fragments; this wraps each one in
 // the shared layout (banner with logo + tabs, footer with legal links) and expands {{icon:Name}}.
 //
@@ -10,7 +10,7 @@ import * as lucide from 'lucide';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'site');
-const out = join(root, 'apps/client/dist');
+const out = join(root, 'dist');
 
 /** Public contact address shown on every page and in the legal documents. */
 const CONTACT_EMAIL = 'hello@bigtomdev.fyi';

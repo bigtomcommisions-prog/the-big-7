@@ -1,5 +1,5 @@
 // Production build for Vercel (bigtomdev.fyi): all the static apps plus the Big Tom Dev site pages,
-// into apps/client/dist. Run with `npm run build:vercel`. Works on Windows, macOS and Linux.
+// into dist/. Run with `npm run build:vercel`. Works on Windows, macOS and Linux.
 import { execSync } from 'node:child_process';
 
 const env = {

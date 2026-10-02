@@ -62,7 +62,7 @@ registerAuthRoutes(app, { oauth, sessions, repos, appUrl: config.APP_ORIGIN.repl
 registerApiRoutes(app, { repos, sessions, oauth, bot, perms, messages, voice, bridges, realtime: () => realtime });
 
 // In production the server also serves the built client (single origin → simple cookies).
-const clientDist = resolve(dirname(fileURLToPath(import.meta.url)), '../../client/dist');
+const clientDist = resolve(dirname(fileURLToPath(import.meta.url)), '../../../dist');
 if (existsSync(clientDist)) {
   await app.register(fastifyStatic, { root: clientDist, wildcard: false });
   app.setNotFoundHandler((req, reply) => {

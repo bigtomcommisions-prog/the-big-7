@@ -20,8 +20,8 @@ export default defineConfig({
     },
   },
   build: {
-    // Emit into dist/<base>/ so a static host serves the files at that path as-is.
-    outDir: `dist${BASE}`,
+    // Emit into the shared site output, dist/<base>/, so a static host serves the files at that path as-is.
+    outDir: `../../dist${BASE}`,
     emptyOutDir: true,
     target: 'es2022',
     chunkSizeWarningLimit: 1500,

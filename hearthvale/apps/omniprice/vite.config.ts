@@ -16,13 +16,13 @@ function omnipriceApi(): Plugin {
   };
 }
 
-// Served at https://bigtomdev.fyi/omniprice/, emitted next to Hearthvale in apps/client/dist.
+// Served at https://bigtomdev.fyi/omniprice/, emitted next to Hearthvale in dist/.
 export default defineConfig({
   base: '/omniprice/',
   plugins: [omnipriceApi()],
   server: { port: 5174, strictPort: true },
   build: {
-    outDir: '../client/dist/omniprice',
+    outDir: '../../dist/omniprice',
     emptyOutDir: true,
     target: 'es2022',
   },

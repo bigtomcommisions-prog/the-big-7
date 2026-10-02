@@ -1,6 +1,6 @@
 # Hearthvale — notes for Claude
 
-Discord server → explorable voxel world. npm workspaces: `packages/shared`, `apps/server`, `apps/client`. See README.md for architecture.
+Discord server → explorable voxel world. npm workspaces: `packages/shared`, `apps/server`, `apps/hearthvale` (the client). See README.md for architecture.
 
 ## Commands
 - `npm run dev` — server (:3000, tsx watch) + Vite client (:5173, proxies /api /auth /ws)
