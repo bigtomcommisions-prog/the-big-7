@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tickets · Big Tom Dev</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Tickets</h1>
+      <p>Report a bug, ask for a feature, or check on something you've already sent.</p>
+    </header>
+
+    <section class="layout">
+      <form id="form" novalidate>
+        <h2>Open a ticket</h2>
+        <label>Title
+          <input name="title" required minlength="3" maxlength="150" placeholder="Short summary of the problem or idea" />
+        </label>
+        <label>Details
+          <textarea name="details" rows="6" maxlength="5000" placeholder="What happened, or what do you want? Steps to reproduce help."></textarea>
+        </label>
+        <label>Priority
+          <select name="priority">
+            <option value="none">Not sure</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </label>
+        <label>Your name <span class="opt">optional</span>
+          <input name="name" maxlength="80" autocomplete="name" />
+        </label>
+        <label>Email or Discord <span class="opt">optional, so I can reply</span>
+          <input name="contact" maxlength="120" />
+        </label>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button type="submit">Send ticket</button>
+        <p id="msg" role="status"></p>
+      </form>
+
+      <div>
+        <h2>All tickets</h2>
+        <ul id="list" aria-live="polite"><li class="empty">Loading tickets…</li></ul>
+        <button id="more" type="button" hidden>Load more</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

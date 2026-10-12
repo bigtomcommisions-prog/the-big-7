@@ -341,14 +341,14 @@ The same Vercel project also serves the Big Tom Dev site around Hearthvale:
 | Path | Page |
 |---|---|
 | `/` | Home: collections of bigger projects |
-| `/the-big-7/` | The Big 7: showcases for Hearthvale, OmniPrice, Homebase and Cardhouse, plus three "coming soon" slots |
+| `/the-big-7/` | The Big 7: showcases for all seven projects |
 | `/privacy/`, `/terms/`, `/cookies/` | Legal pages covering the site and every app |
-| `/hearthvale/`, `/omniprice/`, `/homebase/`, `/cardhouse/` | The apps |
+| `/hearthvale/`, `/omniprice/`, `/homebase/`, `/cardhouse/`, `/loopline/`, `/pixelforge/`, `/orbitlab/` | The apps |
 
 - The pages are HTML fragments in `site/pages/`, and the styles, logo and images are in `site/assets/`.
 - `node scripts/build-site.mjs` (also `npm run build:site`) wraps each page in the shared banner and footer. The banner has the logo, "Big Tom Dev" and two tabs, Home and The Big 7. Projects are reached from those pages, not from the banner. It writes the result into `dist/` next to the app, and Vercel runs it after the client build.
 - The contact email and the "last updated" date for the legal pages are set at the top of `scripts/build-site.mjs`.
-- To fill one of the Big 7 slots, replace its `<section class="slot">` in `site/pages/big7.html`.
+- Projects 05–07 share one section layout on the Big 7 page (`.proj` in `site/assets/site.css`); each sets its own colours with `.proj-<id>`.
 
 **Privacy features in Hearthvale:**
 - Settings → Account has **Download my data** (`GET /api/me/export`) and **Delete my data** (`POST /api/me/delete`). Delete erases every row for the user, revokes the Discord token and disconnects them.
@@ -428,6 +428,22 @@ Cardhouse (`/cardhouse/`, project 04 of The Big 7) is an online card room built 
 - **Three Card Poker** plays like Five Card Draw with three cards: antes, a betting round, swap any of your cards, a second betting round, then a showdown using three-card ranks (straights beat flushes, A-2-3 is the lowest straight). There's no dealer.
 - **Nine-card poker rules are a placeholder** until confirmed: five cards, a betting round, four more cards, a second betting round, best five of nine. It's capped at 5 players so the deck never runs out.
 - **Known simplification:** a short all-in raise reopens betting for everyone, where strict rules only let players who have already acted call.
+
+### Loopline, Pixelforge and Orbit Lab
+
+Projects 05–07 are small, client-only apps: no backend, no accounts, nothing sent anywhere. Each is Vite + TypeScript with no framework, built into `dist/<app>/`.
+
+| App | Where | Logic (unit-tested, no DOM) | Saved in the browser |
+|---|---|---|---|
+| Loopline (`/loopline/`) | `apps/loopline/` | `src/sound.ts` (Web Audio drum and bass synthesis, WAV encoder), `src/pattern.ts` (patterns, presets, share-link format) | `loopline.v1` (latest beat) |
+| Pixelforge (`/pixelforge/`) | `apps/pixelforge/` | `src/doc.ts` (document, line, rectangle, flood fill, palettes) | `pixelforge.v1` (drawing and frames) |
+| Orbit Lab (`/orbitlab/`) | `apps/orbitlab/` | `src/physics.ts` (leapfrog N-body integration, merging, scenes) | nothing |
+
+- **Run locally:** `npm run dev:loopline` (port 5177), `npm run dev:pixelforge` (5178), `npm run dev:orbitlab` (5179).
+- **Loopline share links** put the whole pattern after `#p=` (for example `v1.124.0.0.9.<drum hex>.<bass>.<volumes>`), so the server never sees it. `decode()` rejects anything malformed.
+- **Scheduling:** Loopline uses a look-ahead scheduler (a 25 ms timer queues notes about 120 ms ahead on the audio clock), so timing stays tight even when the page is busy. Playback stops when the tab is hidden.
+- **Orbit Lab physics:** G = 1, softened gravity, 8 leapfrog steps per frame (scaled by the speed setting). Bodies lighter than 0.1 are "dust": they never clump together, so the galaxy scene keeps its stars. Up to 400 bodies.
+- **Legal:** one shared section in the Privacy Policy, Terms and Cookie Policy (`#creative-tools`).
 
 ### Link previews
 

@@ -14,6 +14,9 @@ const steps = [
   'npm run build -w @bigtomdev/omniprice',
   'npm run build -w @bigtomdev/homebase',
   'npm run build -w @bigtomdev/cardhouse',
+  'npm run build -w @bigtomdev/loopline',
+  'npm run build -w @bigtomdev/pixelforge',
+  'npm run build -w @bigtomdev/orbitlab',
   'node scripts/build-site.mjs',
 ];
 
