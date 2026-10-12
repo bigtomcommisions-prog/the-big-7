@@ -6,7 +6,10 @@ const BASE = (process.env.PLANE_BASE_URL ?? 'https://tickets.bigtomdev.fyi').rep
 const KEY = process.env.PLANE_API_KEY ?? '';
 const SLUG = process.env.PLANE_WORKSPACE_SLUG ?? '';
 const PROJECT = process.env.PLANE_PROJECT_ID ?? '';
-const ITEMS = `${BASE}/api/v1/workspaces/${SLUG}/projects/${PROJECT}/work-items/`;
+const ROOT = `${BASE}/api/v1/workspaces/${SLUG}/projects/${PROJECT}`;
+// Newer Plane uses /work-items/; older self-hosted versions only have /issues/. Try the new one, fall back once.
+let ITEMS = `${ROOT}/work-items/`;
+let triedFallback = false;
 
 const PRIORITIES = ['none', 'low', 'medium', 'high', 'urgent'];
 const hits = new Map<string, number[]>(); // best-effort rate limit (per warm instance)
@@ -28,11 +31,21 @@ function limited(ip: string): boolean {
   return recent.length > 5;
 }
 
-function plane(url: string, init: RequestInit = {}) {
-  return fetch(url, {
-    ...init,
-    headers: { 'X-API-Key': KEY, 'content-type': 'application/json', ...(init.headers ?? {}) },
-  });
+async function plane(query: string, init: RequestInit = {}): Promise<Response> {
+  const go = () =>
+    fetch(ITEMS + query, {
+      ...init,
+      headers: { 'X-API-Key': KEY, 'content-type': 'application/json', ...(init.headers ?? {}) },
+    });
+  let res = await go();
+  if (res.status === 404 && !triedFallback) {
+    triedFallback = true;
+    ITEMS = `${ROOT}/issues/`;
+    res = await go();
+  }
+  // Shows up in Vercel > Logs, so a failure is diagnosable without exposing anything to visitors.
+  if (!res.ok) console.error('Plane error', res.status, ITEMS, (await res.clone().text()).slice(0, 300));
+  return res;
 }
 
 export async function GET(request: Request) {
@@ -41,7 +54,7 @@ export async function GET(request: Request) {
   const qs = new URLSearchParams({ per_page: '50', expand: 'state', order_by: '-created_at' });
   if (page) qs.set('cursor', page);
 
-  const res = await plane(`${ITEMS}?${qs}`);
+  const res = await plane(`?${qs}`);
   if (!res.ok) return json({ error: 'Could not load tickets.' }, 502);
   const body = await res.json();
   const rows: any[] = Array.isArray(body) ? body : body.results ?? [];
@@ -92,7 +105,7 @@ export async function POST(request: Request) {
     contact ? ` (${escapeHtml(contact)})` : ''
   }</em></p>`;
 
-  const res = await plane(ITEMS, {
+  const res = await plane('', {
     method: 'POST',
     body: JSON.stringify({
       name: title,

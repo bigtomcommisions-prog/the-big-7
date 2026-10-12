@@ -37,6 +37,9 @@
   "functions": {
     "api/omniprice.js": {
       "maxDuration": 30
+    },
+    "api/tickets.ts": {
+      "maxDuration": 15
     }
   }
 }
